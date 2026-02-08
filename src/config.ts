@@ -55,7 +55,7 @@ export const CONFIG = {
   explorerBaseUrl: process.env.EXPLORER_URL || 'https://explorer.neutaro.io',
   
   // Tip address (for "buy me a coffee" - separate from faucet wallet)
-  tipAddress: process.env.TIP_ADDRESS || 'neutaro1fnpesef2y2lzt48xvtqeh4dts6ztdeuq86vgt3',
+  tipAddress: process.env.TIP_ADDRESS || 'neutaro1e8xal8tqdegu4w48z3fphemd3hc07gech3pfek',
   
   // OpenClaw attestation
   openclawEnabled: process.env.OPENCLAW_ENABLED !== 'false',
