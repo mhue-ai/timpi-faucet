@@ -27,7 +27,7 @@ if [ ! -f "$KEYSTORE_FILE" ]; then
     import { generateWallet, saveKeystore } from 'clawpurse';
     
     const wallet = await generateWallet();
-    await saveKeystore(wallet.wallet, process.env.FAUCET_WALLET_PASSWORD, '$KEYSTORE_FILE');
+    await saveKeystore(wallet.mnemonic, wallet.address, process.env.FAUCET_WALLET_PASSWORD, '$KEYSTORE_FILE');
     
     console.log('═══════════════════════════════════════════════════════════════');
     console.log('  FAUCET WALLET CREATED');
