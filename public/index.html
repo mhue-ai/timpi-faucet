@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timpi Drip — Community Faucet</title>
+  <meta name="description" content="Free NTMPI tokens for humans and AI agents. Community faucet by Mhue.ai">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #050810;
+      --bg-surface: #0a0f1a;
+      --bg-elevated: #111827;
+      --cyan: #00e5cc;
+      --cyan-glow: rgba(0, 229, 204, 0.25);
+      --coral: #ff4d4d;
+      --text-primary: #f0f4ff;
+      --text-secondary: #8892b0;
+      --text-muted: #5a6377;
+      --border: rgba(136, 146, 176, 0.15);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-display);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 15% 15%, var(--cyan-glow), transparent 40%),
+        radial-gradient(circle at 85% 10%, rgba(255, 77, 77, 0.12), transparent 40%);
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+
+    .logo {
+      font-size: 0.9rem;
+      color: var(--cyan);
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 8vw, 3.5rem);
+      font-weight: 700;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--text-primary), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .tagline {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      padding: 20px;
+      margin: 24px 0;
+      background: var(--bg-elevated);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--cyan);
+      font-family: var(--font-mono);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Main Card */
+    .drip-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .address-input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 1rem;
+      font-family: var(--font-mono);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .address-input:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px var(--cyan-glow);
+    }
+
+    .address-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    /* Toggle */
+    .toggle-group {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 14px 20px;
+      font-size: 1rem;
+      font-family: var(--font-display);
+      font-weight: 500;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .toggle-btn:hover {
+      border-color: var(--cyan);
+    }
+
+    .toggle-btn.active {
+      background: linear-gradient(135deg, rgba(0, 229, 204, 0.15), rgba(0, 229, 204, 0.05));
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Progress */
+    .pow-section {
+      margin-bottom: 24px;
+      display: none;
+    }
+
+    .pow-section.visible {
+      display: block;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--bg-surface);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), #00b8a9);
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+      font-family: var(--font-mono);
+    }
+
+    /* Button */
+    .drip-btn {
+      width: 100%;
+      padding: 18px 32px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      font-family: var(--font-display);
+      background: linear-gradient(135deg, var(--cyan), #00b8a9);
+      border: none;
+      border-radius: 16px;
+      color: var(--bg-deep);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .drip-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px var(--cyan-glow);
+    }
+
+    .drip-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .drip-btn.loading {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+    }
+
+    /* Result */
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 12px;
+      display: none;
+    }
+
+    .result.visible {
+      display: block;
+    }
+
+    .result.success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .result.error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .result-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .result.success .result-title { color: var(--success); }
+    .result.error .result-title { color: var(--error); }
+
+    .result-text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      word-break: break-all;
+    }
+
+    .result-link {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    .result-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Live Feed */
+    .live-feed {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .feed-title {
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .feed-list {
+      list-style: none;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .feed-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      animation: slideIn 0.3s ease;
+    }
+
+    .feed-item:last-child {
+      border-bottom: none;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .feed-icon {
+      font-size: 1.2rem;
+    }
+
+    .feed-address {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    .feed-amount {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-weight: 500;
+      color: var(--cyan);
+    }
+
+    .feed-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      min-width: 50px;
+      text-align: right;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* Info */
+    .info-section {
+      margin-top: 32px;
+      padding: 24px;
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    .info-section h3 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .info-label {
+      color: var(--text-muted);
+    }
+
+    .info-value {
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .stats-bar {
+        gap: 16px;
+      }
+      
+      .stat-value {
+        font-size: 1.2rem;
+      }
+
+      .toggle-group {
+        flex-direction: column;
+      }
+
+      .drip-card {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">🚰 COMMUNITY FAUCET</div>
+      <h1>Timpi Drip</h1>
+      <p class="tagline">Free NTMPI for humans & AI agents</p>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-value" id="pool-balance">--</div>
+        <div class="stat-label">Pool Balance</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="drips-today">--</div>
+        <div class="stat-label">Drips Today</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="agent-ratio">--</div>
+        <div class="stat-label">Agent Ratio</div>
+      </div>
+    </div>
+
+    <div class="drip-card">
+      <div class="input-group">
+        <label for="address">Neutaro Address</label>
+        <input 
+          type="text" 
+          id="address" 
+          class="address-input" 
+          placeholder="neutaro1..."
+          autocomplete="off"
+          spellcheck="false"
+        >
+      </div>
+
+      <div class="toggle-group">
+        <button class="toggle-btn active" data-type="human" onclick="setUserType('human')">
+          🧠 I'm Human
+        </button>
+        <button class="toggle-btn" data-type="agent" onclick="setUserType('agent')">
+          🤖 I'm an Agent
+        </button>
+      </div>
+
+      <div class="pow-section" id="pow-section">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-text" id="progress-text">Solving proof of work...</div>
+      </div>
+
+      <button class="drip-btn" id="drip-btn" onclick="requestDrip()">
+        💧 Get NTMPI
+      </button>
+
+      <div class="result" id="result">
+        <div class="result-title" id="result-title"></div>
+        <div class="result-text" id="result-text"></div>
+      </div>
+    </div>
+
+    <div class="live-feed">
+      <div class="feed-header">
+        <div class="feed-title">
+          <span class="live-dot"></span>
+          Live Feed
+        </div>
+      </div>
+      <ul class="feed-list" id="feed-list">
+        <li class="feed-item" style="justify-content: center; color: var(--text-muted);">
+          Loading...
+        </li>
+      </ul>
+    </div>
+
+    <div class="info-section">
+      <h3>How it works</h3>
+      <div class="info-grid">
+        <div>
+          <div class="info-item">
+            <span class="info-label">New wallets</span>
+            <span class="info-value" id="drip-new">0.5 NTMPI</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Trusted wallets</span>
+            <span class="info-value" id="drip-trusted">1.0 NTMPI</span>
+          </div>
+        </div>
+        <div>
+          <div class="info-item">
+            <span class="info-label">Cooldown (new)</span>
+            <span class="info-value" id="cooldown-new">48h</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Cooldown (trusted)</span>
+            <span class="info-value" id="cooldown-trusted">24h</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Community faucet by <a href="https://mhue.ai" target="_blank">Mhue.ai</a> •
+    Powered by <a href="https://clawpurse.ai" target="_blank">ClawPurse</a> •
+    <a href="https://timpi.io" target="_blank">Timpi</a>
+  </footer>
+
+  <script>
+    // State
+    let userType = 'human';
+    let isProcessing = false;
+
+    // User type toggle
+    function setUserType(type) {
+      userType = type;
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.type === type);
+      });
+    }
+
+    // PoW Solver
+    async function solvePow(address, timestamp, difficulty) {
+      const target = '0'.repeat(difficulty);
+      let nonce = 0;
+      const startTime = Date.now();
+      
+      const powSection = document.getElementById('pow-section');
+      const progressFill = document.getElementById('progress-fill');
+      const progressText = document.getElementById('progress-text');
+      
+      powSection.classList.add('visible');
+      
+      while (true) {
+        // Check in batches for performance
+        for (let i = 0; i < 1000; i++) {
+          const data = `${address}:${timestamp}:${nonce}`;
+          const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(data));
+          const hashHex = Array.from(new Uint8Array(hashBuffer))
+            .map(b => b.toString(16).padStart(2, '0'))
+            .join('');
+          
+          if (hashHex.startsWith(target)) {
+            progressFill.style.width = '100%';
+            progressText.textContent = 'Solved!';
+            return { nonce: nonce.toString(), timestamp };
+          }
+          nonce++;
+        }
+        
+        // Update progress (estimate based on expected attempts)
+        const expectedAttempts = Math.pow(16, difficulty);
+        const progress = Math.min((nonce / expectedAttempts) * 100, 95);
+        progressFill.style.width = `${progress}%`;
+        progressText.textContent = `Solving... ${nonce.toLocaleString()} attempts (${((Date.now() - startTime) / 1000).toFixed(1)}s)`;
+        
+        // Yield to UI
+        await new Promise(r => setTimeout(r, 0));
+      }
+    }
+
+    // Request drip
+    async function requestDrip() {
+      const address = document.getElementById('address').value.trim();
+      const btn = document.getElementById('drip-btn');
+      const result = document.getElementById('result');
+      const powSection = document.getElementById('pow-section');
+      
+      // Validate
+      if (!address.startsWith('neutaro1') || address.length !== 46) {
+        showResult('error', 'Invalid Address', 'Please enter a valid Neutaro address (starts with neutaro1)');
+        return;
+      }
+      
+      if (isProcessing) return;
+      isProcessing = true;
+      
+      // Update UI
+      btn.disabled = true;
+      btn.classList.add('loading');
+      btn.innerHTML = '⏳ Processing...';
+      result.classList.remove('visible');
+      
+      try {
+        // Solve PoW
+        const timestamp = Date.now();
+        const difficulty = 4; // Will be fetched from API in production
+        const pow = await solvePow(address, timestamp, difficulty);
+        
+        btn.innerHTML = '📡 Sending...';
+        
+        // Submit request
+        const response = await fetch('/api/drip', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            address,
+            pow,
+            isAgent: userType === 'agent'
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          showResult('success', '💧 Drip Successful!', 
+            `${data.amount} NTMPI sent to your wallet.<br>
+            <a href="${data.explorerUrl}" target="_blank" class="result-link">View on Explorer →</a><br>
+            <small>Next drip: ${new Date(data.nextDripAt).toLocaleString()}</small>`
+          );
+          loadFeed(); // Refresh feed
+        } else {
+          showResult('error', 'Drip Failed', data.error || 'Unknown error occurred');
+        }
+        
+      } catch (err) {
+        showResult('error', 'Error', err.message || 'Network error. Please try again.');
+      } finally {
+        isProcessing = false;
+        btn.disabled = false;
+        btn.classList.remove('loading');
+        btn.innerHTML = '💧 Get NTMPI';
+        powSection.classList.remove('visible');
+        document.getElementById('progress-fill').style.width = '0%';
+      }
+    }
+
+    // Show result
+    function showResult(type, title, text) {
+      const result = document.getElementById('result');
+      const resultTitle = document.getElementById('result-title');
+      const resultText = document.getElementById('result-text');
+      
+      result.className = `result visible ${type}`;
+      resultTitle.innerHTML = title;
+      resultText.innerHTML = text;
+    }
+
+    // Load stats
+    async function loadStats() {
+      try {
+        const response = await fetch('/api/status');
+        const data = await response.json();
+        
+        document.getElementById('pool-balance').textContent = 
+          data.pool.liquid.toFixed(1) + ' NTMPI';
+        document.getElementById('drips-today').textContent = 
+          data.stats.dripsToday;
+        document.getElementById('agent-ratio').textContent = 
+          (data.stats.agentRatio * 100).toFixed(0) + '%';
+        
+        document.getElementById('drip-new').textContent = 
+          data.config.dripNew + ' NTMPI';
+        document.getElementById('drip-trusted').textContent = 
+          data.config.dripTrusted + ' NTMPI';
+        document.getElementById('cooldown-new').textContent = 
+          data.config.cooldownNew + 'h';
+        document.getElementById('cooldown-trusted').textContent = 
+          data.config.cooldownTrusted + 'h';
+          
+      } catch (err) {
+        console.error('Failed to load stats:', err);
+      }
+    }
+
+    // Load feed
+    async function loadFeed() {
+      try {
+        const response = await fetch('/api/drips/recent');
+        const drips = await response.json();
+        
+        const feedList = document.getElementById('feed-list');
+        
+        if (drips.length === 0) {
+          feedList.innerHTML = '<li class="feed-item" style="justify-content: center; color: var(--text-muted);">No drips yet. Be the first!</li>';
+          return;
+        }
+        
+        feedList.innerHTML = drips.map(drip => `
+          <li class="feed-item">
+            <span class="feed-icon">${drip.isAgent ? '🤖' : '💧'}</span>
+            <span class="feed-address">${drip.address}</span>
+            <span class="feed-amount">+${drip.amount} NTMPI</span>
+            <span class="feed-time">${timeAgo(drip.timestamp)}</span>
+          </li>
+        `).join('');
+        
+      } catch (err) {
+        console.error('Failed to load feed:', err);
+      }
+    }
+
+    // Time ago helper
+    function timeAgo(timestamp) {
+      const seconds = Math.floor((Date.now() - new Date(timestamp).getTime()) / 1000);
+      if (seconds < 60) return seconds + 's';
+      if (seconds < 3600) return Math.floor(seconds / 60) + 'm';
+      if (seconds < 86400) return Math.floor(seconds / 3600) + 'h';
+      return Math.floor(seconds / 86400) + 'd';
+    }
+
+    // Enter key handler
+    document.getElementById('address').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') requestDrip();
+    });
+
+    // Initial load
+    loadStats();
+    loadFeed();
+    
+    // Refresh periodically
+    setInterval(loadStats, 30000);
+    setInterval(loadFeed, 15000);
+  </script>
+</body>
+</html>

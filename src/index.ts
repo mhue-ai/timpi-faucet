@@ -1,11 +1,15 @@
 // Timpi Drip - Community faucet for NTMPI tokens
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
+import fastifyStatic from '@fastify/static';
 import { CONFIG, validateConfig } from './config.js';
 import { initDatabase } from './db/index.js';
 import { registerRoutes } from './api/routes.js';
 import { mkdirSync, existsSync } from 'fs';
-import { dirname } from 'path';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Ensure data directory exists
 const dataDir = dirname(CONFIG.dbPath);
@@ -41,7 +45,13 @@ await app.register(cors, {
   methods: ['GET', 'POST'],
 });
 
-// Register routes
+// Serve static files
+await app.register(fastifyStatic, {
+  root: join(__dirname, '..', 'public'),
+  prefix: '/',
+});
+
+// Register API routes
 await registerRoutes(app);
 
 // Start server

@@ -144,16 +144,12 @@ export async function registerRoutes(app: FastifyInstance) {
   });
   
   // Text mode (for AI agents)
-  app.get('/', async (request, reply) => {
-    const accept = request.headers.accept || '';
-    const format = (request.query as any).format;
+  app.get('/api/info', async (request, reply) => {
+    const status = await getFaucetStatus();
+    const stats = getTodayStats();
     
-    if (accept.includes('text/plain') || format === 'text') {
-      const status = await getFaucetStatus();
-      const stats = getTodayStats();
-      
-      reply.type('text/plain');
-      return `TIMPI DRIP - Community Faucet
+    reply.type('text/plain');
+    return `TIMPI DRIP - Community Faucet
 ============================
 
 Pool Balance: ${status.pool.liquid.toFixed(2)} NTMPI (liquid)
@@ -185,22 +181,5 @@ Status:
 
 Docs: ${request.protocol}://${request.hostname}/docs
 `;
-    }
-    
-    // Return HTML for browsers (will be replaced with full UI)
-    reply.type('text/html');
-    return `<!DOCTYPE html>
-<html>
-<head>
-  <title>Timpi Drip</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-  <h1>🚰 Timpi Drip</h1>
-  <p>Community faucet by Mhue.ai</p>
-  <p>Full UI coming soon. Use <code>?format=text</code> for API info.</p>
-</body>
-</html>`;
   });
 }
