@@ -23,8 +23,8 @@ RUN npm run build
 # Production image
 FROM node:22-alpine
 
-# Install bc for balance checks in entrypoint
-RUN apk add --no-cache bc
+# Install bc + openssl for balance checks and TLS generation
+RUN apk add --no-cache bc openssl
 
 # Security: Create non-root user
 RUN addgroup -g 1001 faucet && adduser -u 1001 -G faucet -s /bin/sh -D faucet
