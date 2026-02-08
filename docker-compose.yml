@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  timpi-drip:
+    build: .
+    container_name: timpi-drip
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ./data:/app/data
+      - ${KEYSTORE_PATH:-~/.clawpurse}:/app/.clawpurse:ro
+    environment:
+      - FAUCET_WALLET_PASSWORD=${FAUCET_WALLET_PASSWORD}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - KEYSTORE_PATH=/app/.clawpurse/keystore.enc
+      - DB_PATH=/app/data/faucet.db
+      - DISCORD_WEBHOOK=${DISCORD_WEBHOOK:-}
+      - ALERT_EMAIL=${ALERT_EMAIL:-}
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
