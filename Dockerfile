@@ -3,17 +3,20 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy ClawPurse first (dependency)
-COPY ../ClawPurse /clawpurse
-WORKDIR /clawpurse
-RUN npm ci && npm run build
-
-# Build faucet
-WORKDIR /app
+# Copy package files
 COPY package*.json ./
+
+# Install dependencies (ClawPurse comes from npm)
 RUN npm ci
+
+# Copy source
 COPY . .
+
+# Build TypeScript
 RUN npm run build
+
+# Copy static files
+RUN cp -r public dist/ || true
 
 # Production image
 FROM node:22-alpine
@@ -27,7 +30,7 @@ WORKDIR /app
 COPY --from=builder --chown=faucet:faucet /app/dist ./dist
 COPY --from=builder --chown=faucet:faucet /app/node_modules ./node_modules
 COPY --from=builder --chown=faucet:faucet /app/package.json ./
-COPY --from=builder --chown=faucet:faucet /clawpurse /clawpurse
+COPY --from=builder --chown=faucet:faucet /app/public ./public
 
 # Create data directory
 RUN mkdir -p /app/data && chown faucet:faucet /app/data
@@ -35,8 +38,14 @@ RUN mkdir -p /app/data && chown faucet:faucet /app/data
 # Switch to non-root user
 USER faucet
 
-# Expose ports
-EXPOSE 3000 3001
+# Environment defaults
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOST=0.0.0.0
+ENV DB_PATH=/app/data/faucet.db
+
+# Expose port
+EXPOSE 3000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

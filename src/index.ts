@@ -7,6 +7,7 @@ import { CONFIG, validateConfig } from './config.js';
 import { initDatabase } from './db/index.js';
 import { registerRoutes } from './api/routes.js';
 import { registerAdminRoutes } from './admin/routes.js';
+import { registerSecurityMiddleware } from './middleware/security.js';
 import { mkdirSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -58,6 +59,9 @@ await app.register(fastifyStatic, {
   root: join(__dirname, '..', 'public'),
   prefix: '/',
 });
+
+// Register security middleware
+await registerSecurityMiddleware(app);
 
 // Register API routes
 await registerRoutes(app);
