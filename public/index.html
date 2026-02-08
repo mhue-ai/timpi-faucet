@@ -20,6 +20,7 @@
       --text-secondary: #8892b0;
       --text-muted: #5a6377;
       --border: rgba(136, 146, 176, 0.15);
+      --border-accent: rgba(255, 77, 77, 0.35);
       --success: #10b981;
       --warning: #f59e0b;
       --error: #ef4444;
@@ -71,6 +72,59 @@
     .tagline {
       color: var(--text-secondary);
       font-size: 1.1rem;
+    }
+
+    /* Donate Banner */
+    .donate-banner {
+      background: linear-gradient(135deg, rgba(0, 229, 204, 0.1), rgba(255, 77, 77, 0.08));
+      border: 1px solid var(--border-accent);
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .donate-banner-text {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .donate-banner-text span {
+      font-size: 1.5rem;
+    }
+
+    .donate-banner-text p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .donate-banner-text p strong {
+      color: var(--coral);
+    }
+
+    .donate-banner-address {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--cyan);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      word-break: break-all;
+    }
+
+    .donate-banner-address:hover {
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .donate-banner-address.copied {
+      background: rgba(16, 185, 129, 0.3);
     }
 
     /* Stats Bar */
@@ -379,23 +433,6 @@
       text-align: right;
     }
 
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 48px 24px;
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
-
-    footer a {
-      color: var(--cyan);
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
     /* Info */
     .info-section {
       margin-top: 32px;
@@ -434,6 +471,85 @@
       font-family: var(--font-mono);
     }
 
+    /* Tip Section */
+    .tip-section {
+      margin-top: 32px;
+      text-align: center;
+    }
+
+    .tip-section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .tip-section p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .tip-box {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-accent);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    }
+
+    .tip-box-title {
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: var(--cyan);
+      margin-bottom: 12px;
+    }
+
+    .tip-box-address {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      word-break: break-all;
+    }
+
+    .tip-box-address:hover {
+      background: rgba(0,0,0,0.5);
+      border-color: var(--cyan);
+    }
+
+    .tip-box-address.copied {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--success);
+    }
+
+    .tip-box-note {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
     /* Responsive */
     @media (max-width: 600px) {
       .stats-bar {
@@ -451,6 +567,15 @@
       .drip-card {
         padding: 24px 20px;
       }
+
+      .donate-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .donate-banner-address {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -461,6 +586,17 @@
       <h1>Timpi Drip</h1>
       <p class="tagline">Free NTMPI for humans & AI agents</p>
     </header>
+
+    <!-- Donate Banner -->
+    <div class="donate-banner">
+      <div class="donate-banner-text">
+        <span>💝</span>
+        <p><strong>Help keep the faucet flowing!</strong> Donate to refill the pool.</p>
+      </div>
+      <code class="donate-banner-address" id="donate-address-top" onclick="copyAddress(this)" title="Click to copy">
+        Loading...
+      </code>
+    </div>
 
     <div class="stats-bar">
       <div class="stat">
@@ -555,6 +691,19 @@
         </div>
       </div>
     </div>
+
+    <!-- Tip Section -->
+    <div class="tip-section">
+      <h3>☕ Support the Faucet</h3>
+      <p>This faucet runs on community donations. Help us keep dripping!</p>
+      <div class="tip-box">
+        <div class="tip-box-title">Donate NTMPI to the faucet pool</div>
+        <code class="tip-box-address" id="donate-address-bottom" onclick="copyAddress(this)" title="Click to copy">
+          Loading...
+        </code>
+        <p class="tip-box-note">Click to copy • All donations go directly to the drip pool</p>
+      </div>
+    </div>
   </div>
 
   <footer>
@@ -567,6 +716,26 @@
     // State
     let userType = 'human';
     let isProcessing = false;
+    let faucetAddress = '';
+
+    // Copy address to clipboard
+    async function copyAddress(element) {
+      if (!faucetAddress) return;
+      
+      try {
+        await navigator.clipboard.writeText(faucetAddress);
+        element.classList.add('copied');
+        const originalText = element.textContent;
+        element.textContent = '✓ Copied!';
+        
+        setTimeout(() => {
+          element.classList.remove('copied');
+          element.textContent = faucetAddress;
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    }
 
     // User type toggle
     function setUserType(type) {
@@ -714,6 +883,13 @@
           data.config.cooldownNew + 'h';
         document.getElementById('cooldown-trusted').textContent = 
           data.config.cooldownTrusted + 'h';
+
+        // Update donation addresses if wallet address is available
+        if (data.wallet && data.wallet.address) {
+          faucetAddress = data.wallet.address;
+          document.getElementById('donate-address-top').textContent = faucetAddress;
+          document.getElementById('donate-address-bottom').textContent = faucetAddress;
+        }
           
       } catch (err) {
         console.error('Failed to load stats:', err);

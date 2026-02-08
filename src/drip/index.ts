@@ -293,6 +293,7 @@ export async function processDrip(request: DripRequest): Promise<DripResult> {
  */
 export async function getFaucetStatus(): Promise<{
   pool: { liquid: number; staked: number; total: number };
+  wallet: { address: string };
   config: { dripNew: number; dripTrusted: number; cooldownNew: number; cooldownTrusted: number };
 }> {
   try {
@@ -309,6 +310,9 @@ export async function getFaucetStatus(): Promise<{
         staked,
         total: liquid + staked,
       },
+      wallet: {
+        address,
+      },
       config: {
         dripNew: CONFIG.dripAmountNew,
         dripTrusted: CONFIG.dripAmountTrusted,
@@ -319,6 +323,7 @@ export async function getFaucetStatus(): Promise<{
   } catch (error) {
     return {
       pool: { liquid: 0, staked: 0, total: 0 },
+      wallet: { address: '' },
       config: {
         dripNew: CONFIG.dripAmountNew,
         dripTrusted: CONFIG.dripAmountTrusted,
