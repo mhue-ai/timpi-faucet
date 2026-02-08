@@ -95,7 +95,6 @@ const printBanner = (port: number, protocolLabel: string) => {
 ╠══════════════════════════════════════════════════════════════╣
 ║ Status: 🟢 RUNNING (${protocolLabel})                               ║
 ║ Port: ${port.toString().padEnd(55)}║
-║ Admin Port: ${CONFIG.adminPort.toString().padEnd(49)}║
 ║ Database: ${CONFIG.dbPath.padEnd(51)}║
 ╠══════════════════════════════════════════════════════════════╣
 ║ Drip (new): ${CONFIG.dripAmountNew} NTMPI / ${CONFIG.cooldownNew}h cooldown                      ║
