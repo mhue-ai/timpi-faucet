@@ -15,10 +15,14 @@ import {
 } from '../db/index.js';
 import { getFaucetStatus } from '../drip/index.js';
 import { loadKeystore, getBalance, getDelegations } from 'clawpurse';
+import { isIpAllowed, secureCompare } from '../utils/ip.js';
 
 // Simple session store (in production, use Redis or similar)
 const sessions = new Map<string, { createdAt: number; ip: string }>();
 const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOGIN_LOCKOUT_MS = 15 * 60 * 1000; // 15 minutes
+const loginAttempts = new Map<string, { count: number; firstAttempt: number }>();
 
 function generateSessionId(): string {
   return Array.from(crypto.getRandomValues(new Uint8Array(32)))
@@ -35,21 +39,56 @@ function getClientIp(request: FastifyRequest): string {
   return request.ip;
 }
 
-// Middleware: Check IP allowlist
+// Middleware: Check IP allowlist (supports CIDR)
 function checkIpAllowlist(request: FastifyRequest, reply: FastifyReply): boolean {
   const ip = getClientIp(request);
-  const allowed = CONFIG.adminIpAllowlist.some(allowedIp => {
-    if (allowedIp === ip) return true;
-    if (allowedIp === '127.0.0.1' && (ip === '127.0.0.1' || ip === '::1')) return true;
-    return false;
-  });
   
-  if (!allowed) {
+  if (!isIpAllowed(ip, CONFIG.adminIpAllowlist)) {
     logAudit('admin_ip_blocked', undefined, ip);
     reply.code(403).send({ error: 'Access denied' });
     return false;
   }
   return true;
+}
+
+// Check login rate limiting
+function checkLoginRateLimit(ip: string): { allowed: boolean; retryAfter?: number } {
+  const now = Date.now();
+  const attempts = loginAttempts.get(ip);
+  
+  if (!attempts) {
+    return { allowed: true };
+  }
+  
+  // Reset if lockout period passed
+  if (now - attempts.firstAttempt > LOGIN_LOCKOUT_MS) {
+    loginAttempts.delete(ip);
+    return { allowed: true };
+  }
+  
+  if (attempts.count >= MAX_LOGIN_ATTEMPTS) {
+    const retryAfter = Math.ceil((attempts.firstAttempt + LOGIN_LOCKOUT_MS - now) / 1000);
+    return { allowed: false, retryAfter };
+  }
+  
+  return { allowed: true };
+}
+
+// Record failed login attempt
+function recordLoginAttempt(ip: string): void {
+  const now = Date.now();
+  const attempts = loginAttempts.get(ip);
+  
+  if (!attempts || now - attempts.firstAttempt > LOGIN_LOCKOUT_MS) {
+    loginAttempts.set(ip, { count: 1, firstAttempt: now });
+  } else {
+    attempts.count++;
+  }
+}
+
+// Clear login attempts on success
+function clearLoginAttempts(ip: string): void {
+  loginAttempts.delete(ip);
 }
 
 // Middleware: Check session
@@ -79,12 +118,26 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     
     if (!checkIpAllowlist(request, reply)) return;
     
+    // Check rate limit
+    const rateLimit = checkLoginRateLimit(ip);
+    if (!rateLimit.allowed) {
+      logAudit('admin_login_rate_limited', undefined, ip);
+      reply.header('Retry-After', rateLimit.retryAfter!.toString());
+      return reply.code(429).send({ 
+        error: `Too many login attempts. Try again in ${rateLimit.retryAfter} seconds.` 
+      });
+    }
+    
     const { password } = request.body;
     
-    if (password !== CONFIG.adminPassword) {
+    // Use timing-safe comparison
+    if (!secureCompare(password || '', CONFIG.adminPassword)) {
+      recordLoginAttempt(ip);
       logAudit('admin_login_failed', undefined, ip);
       return reply.code(401).send({ error: 'Invalid password' });
     }
+    
+    clearLoginAttempts(ip);
     
     const sessionId = generateSessionId();
     sessions.set(sessionId, { createdAt: Date.now(), ip });
@@ -93,7 +146,7 @@ export async function registerAdminRoutes(app: FastifyInstance) {
     
     reply.setCookie('admin_session', sessionId, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: SESSION_DURATION / 1000,
     });
