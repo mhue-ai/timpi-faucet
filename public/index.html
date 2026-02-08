@@ -14,12 +14,14 @@
       --bg-surface: #0a0f1a;
       --bg-elevated: #111827;
       --cyan: #00e5cc;
+      --cyan-bright: #00e5cc;
       --cyan-glow: rgba(0, 229, 204, 0.25);
       --coral: #ff4d4d;
       --text-primary: #f0f4ff;
       --text-secondary: #8892b0;
       --text-muted: #5a6377;
       --border: rgba(136, 146, 176, 0.15);
+      --border-subtle: rgba(136, 146, 176, 0.2);
       --border-accent: rgba(255, 77, 77, 0.35);
       --success: #10b981;
       --warning: #f59e0b;
@@ -74,57 +76,46 @@
       font-size: 1.1rem;
     }
 
-    /* Donate Banner */
+    /* Donate Banner - subtle, centered */
     .donate-banner {
-      background: linear-gradient(135deg, rgba(0, 229, 204, 0.1), rgba(255, 77, 77, 0.08));
-      border: 1px solid var(--border-accent);
-      border-radius: 16px;
+      text-align: center;
       padding: 16px 20px;
       margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
+      border-radius: 12px;
+      background: rgba(0, 229, 204, 0.05);
+      border: 1px solid var(--border);
     }
 
-    .donate-banner-text {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .donate-banner-text span {
-      font-size: 1.5rem;
-    }
-
-    .donate-banner-text p {
+    .donate-banner p {
       color: var(--text-secondary);
       font-size: 0.9rem;
+      margin-bottom: 10px;
     }
 
-    .donate-banner-text p strong {
-      color: var(--coral);
+    .donate-banner p strong {
+      color: var(--cyan);
     }
 
     .donate-banner-address {
       font-family: var(--font-mono);
-      font-size: 0.75rem;
-      color: var(--cyan);
-      background: rgba(0, 0, 0, 0.3);
-      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.2);
+      padding: 8px 14px;
       border-radius: 8px;
       cursor: pointer;
-      transition: background 0.2s;
-      word-break: break-all;
+      transition: all 0.2s;
+      display: inline-block;
     }
 
     .donate-banner-address:hover {
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.4);
+      color: var(--cyan);
     }
 
     .donate-banner-address.copied {
-      background: rgba(16, 185, 129, 0.3);
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--success);
     }
 
     /* Stats Bar */
@@ -471,25 +462,27 @@
       font-family: var(--font-mono);
     }
 
-    /* Tip Section */
+    /* Tip Section - matches ClawPurse.ai exactly */
     .tip-section {
-      margin-top: 32px;
+      margin-top: 48px;
       text-align: center;
     }
 
-    .tip-section h3 {
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-      color: var(--text-primary);
+    .tip-section h2 {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      color: var(--coral);
     }
 
-    .tip-section p {
+    .tip-section > p {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 24px;
       color: var(--text-secondary);
-      font-size: 0.95rem;
-      margin-bottom: 16px;
     }
 
     .tip-box {
+      text-align: center;
       background: var(--bg-elevated);
       border: 1px solid var(--border-accent);
       border-radius: 18px;
@@ -498,23 +491,22 @@
     }
 
     .tip-box-title {
+      margin: 0 0 8px;
       font-weight: 600;
       letter-spacing: 0.05em;
-      color: var(--cyan);
-      margin-bottom: 12px;
+      color: var(--cyan-bright);
     }
 
     .tip-box-address {
       display: inline-block;
       font-family: var(--font-mono);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       padding: 12px 18px;
       border-radius: 12px;
       background: rgba(0,0,0,0.35);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-subtle);
       cursor: pointer;
       transition: all 0.2s;
-      word-break: break-all;
     }
 
     .tip-box-address:hover {
@@ -528,9 +520,9 @@
     }
 
     .tip-box-note {
-      margin-top: 12px;
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      margin: 16px 0 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
     }
 
     /* Footer */
@@ -567,15 +559,6 @@
       .drip-card {
         padding: 24px 20px;
       }
-
-      .donate-banner {
-        flex-direction: column;
-        text-align: center;
-      }
-
-      .donate-banner-address {
-        width: 100%;
-      }
     }
   </style>
 </head>
@@ -587,13 +570,10 @@
       <p class="tagline">Free NTMPI for humans & AI agents</p>
     </header>
 
-    <!-- Donate Banner -->
+    <!-- Donate Banner - subtle, centered -->
     <div class="donate-banner">
-      <div class="donate-banner-text">
-        <span>💝</span>
-        <p><strong>Help keep the faucet flowing!</strong> Donate to refill the pool.</p>
-      </div>
-      <code class="donate-banner-address" id="donate-address-top" onclick="copyAddress(this)" title="Click to copy">
+      <p><strong>Help keep the faucet flowing!</strong> Donate to refill the pool:</p>
+      <code class="donate-banner-address" id="donate-address-top" onclick="copyAddress(this, 'faucet')" title="Click to copy">
         Loading...
       </code>
     </div>
@@ -692,18 +672,18 @@
       </div>
     </div>
 
-    <!-- Tip Section -->
-    <div class="tip-section">
-      <h3>☕ Support the Faucet</h3>
-      <p>This faucet runs on community donations. Help us keep dripping!</p>
+    <!-- Tip Section - ClawPurse.ai style -->
+    <section class="tip-section">
+      <h2>Fuel Future Wallet Work</h2>
+      <p>If Timpi Drip helped you get started, tip the builders a Timpi coffee. Every contribution keeps the guardrails sharp.</p>
       <div class="tip-box">
-        <div class="tip-box-title">Donate NTMPI to the faucet pool</div>
-        <code class="tip-box-address" id="donate-address-bottom" onclick="copyAddress(this)" title="Click to copy">
+        <p class="tip-box-title">Buy Mhue a Timpi coffee ☕</p>
+        <code class="tip-box-address" id="tip-address" onclick="copyAddress(this, 'tip')" title="Click to copy">
           Loading...
         </code>
-        <p class="tip-box-note">Click to copy • All donations go directly to the drip pool</p>
+        <p class="tip-box-note">Memo optional — just let us know what you shipped!</p>
       </div>
-    </div>
+    </section>
   </div>
 
   <footer>
@@ -717,20 +697,22 @@
     let userType = 'human';
     let isProcessing = false;
     let faucetAddress = '';
+    let tipAddress = '';
 
     // Copy address to clipboard
-    async function copyAddress(element) {
-      if (!faucetAddress) return;
+    async function copyAddress(element, type) {
+      const addr = type === 'tip' ? tipAddress : faucetAddress;
+      if (!addr) return;
       
       try {
-        await navigator.clipboard.writeText(faucetAddress);
+        await navigator.clipboard.writeText(addr);
         element.classList.add('copied');
         const originalText = element.textContent;
         element.textContent = '✓ Copied!';
         
         setTimeout(() => {
           element.classList.remove('copied');
-          element.textContent = faucetAddress;
+          element.textContent = addr;
         }, 2000);
       } catch (err) {
         console.error('Failed to copy:', err);
@@ -884,11 +866,16 @@
         document.getElementById('cooldown-trusted').textContent = 
           data.config.cooldownTrusted + 'h';
 
-        // Update donation addresses if wallet address is available
+        // Update faucet address (for donations to pool)
         if (data.wallet && data.wallet.address) {
           faucetAddress = data.wallet.address;
           document.getElementById('donate-address-top').textContent = faucetAddress;
-          document.getElementById('donate-address-bottom').textContent = faucetAddress;
+        }
+        
+        // Update tip address (for coffee tips)
+        if (data.tipAddress) {
+          tipAddress = data.tipAddress;
+          document.getElementById('tip-address').textContent = tipAddress;
         }
           
       } catch (err) {
