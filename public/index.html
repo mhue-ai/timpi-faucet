@@ -181,6 +181,85 @@
       text-decoration: underline;
     }
 
+    .wallet-cta-wrapper {
+      text-align: center;
+      margin: 32px 0 16px;
+    }
+
+    .wallet-cta {
+      background: transparent;
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .wallet-cta:hover {
+      background: rgba(0, 229, 204, 0.1);
+      box-shadow: 0 10px 30px var(--cyan-glow);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 16, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+    }
+
+    .modal h3 {
+      margin-bottom: 12px;
+    }
+
+    .modal p {
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .wallet-modal-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      color: var(--cyan);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .wallet-modal-link:hover {
+      text-decoration: underline;
+    }
+
+    .modal-close {
+      padding: 10px 20px;
+      border-radius: 999px;
+      border: none;
+      background: var(--coral);
+      color: var(--bg-deep);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
     .address-input {
       width: 100%;
       padding: 16px 20px;
@@ -595,7 +674,7 @@
 
     <!-- Donate Banner - subtle, centered -->
     <div class="donate-banner">
-      <p><strong>Staking-backed faucet.</strong> 95k NTMPI stays staked via ClawPurse, 5k stays liquid for daily drips. Refill the buffer:</p>
+      <p><strong>Staking-backed faucet.</strong> Refill the buffer:</p>
       <code class="donate-banner-address" id="donate-address-top" onclick="copyAddress(this, 'faucet')" title="Click to copy">
         Loading...
       </code>
@@ -656,6 +735,10 @@
       </div>
     </div>
 
+    <div class="wallet-cta-wrapper">
+      <button class="wallet-cta" onclick="openWalletModal()">Need a Neutaro wallet before you drip?</button>
+    </div>
+
     <div class="live-feed">
       <div class="feed-header">
         <div class="feed-title">
@@ -695,14 +778,9 @@
         </div>
       </div>
       <ul class="info-details">
-        <li>Funding split: <strong>95k NTMPI staked</strong> with Neutaro validators, <strong>5k liquid</strong> for daily drips.</li>
         <li>Trust upgrade when wallets are &gt;7 days old, have 3+ on-chain txs, social proof, or an OpenClaw attestation.</li>
         <li>Proof-of-work challenge replaces CAPTCHA so human + agentic AI flows both work.</li>
-        <li>Admin panel enforces IP allowlists (<code>10.10.30.0/24</code> for Zach) and logs everything through ClawPurse receipts.</li>
       </ul>
-      <p style="margin-top:16px; color: var(--text-secondary);">
-        Need a Neutaro wallet before you drip? <a href="https://clawpurse.ai" target="_blank">Download ClawPurse</a> for local-only key management. Want the full treasury math? <a href="https://clawpurse.ai#staking" target="_blank">Here’s how ClawPurse keeps Timpi Drip funded →</a>
-      </p>
     </div>
 
     <!-- Tip Section - ClawPurse.ai style -->
@@ -725,7 +803,32 @@
     <a href="https://timpi.io" target="_blank">Timpi</a>
   </footer>
 
+  <div class="modal-overlay" id="wallet-modal" onclick="overlayClick(event)">
+    <div class="modal">
+      <h3>Need a Neutaro wallet before you drip?</h3>
+      <p>Grab ClawPurse for local-only key management in seconds.</p>
+      <a class="wallet-modal-link" href="https://clawpurse.ai" target="_blank">Visit ClawPurse →</a>
+      <button class="modal-close" onclick="closeWalletModal()">Close</button>
+    </div>
+  </div>
+
   <script>
+    const walletModal = document.getElementById('wallet-modal');
+
+    function openWalletModal() {
+      walletModal.classList.add('active');
+    }
+
+    function closeWalletModal() {
+      walletModal.classList.remove('active');
+    }
+
+    function overlayClick(event) {
+      if (event.target === walletModal) {
+        closeWalletModal();
+      }
+    }
+
     // State
     let userType = 'human';
     let isProcessing = false;
