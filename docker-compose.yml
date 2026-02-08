@@ -8,39 +8,44 @@ services:
     ports:
       - "3000:3000"
     volumes:
+      # Persist wallet and database
       - drip-data:/app/data
-      - ${KEYSTORE_PATH:-./keystore}:/app/keystore:ro
     environment:
-      - NODE_ENV=production
-      - FAUCET_WALLET_PASSWORD=${FAUCET_WALLET_PASSWORD:?Wallet password required}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Admin password required}
-      - KEYSTORE_PATH=/app/keystore/keystore.enc
+      # Required - set these before first run
+      - FAUCET_WALLET_PASSWORD=${FAUCET_WALLET_PASSWORD:?Set FAUCET_WALLET_PASSWORD}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:?Set ADMIN_PASSWORD}
+      
+      # Wallet & DB paths (inside container)
+      - KEYSTORE_PATH=/app/data/keystore.enc
       - DB_PATH=/app/data/faucet.db
-      - ADMIN_IP_ALLOWLIST=${ADMIN_IP_ALLOWLIST:-127.0.0.1,::1}
-      - DISCORD_WEBHOOK=${DISCORD_WEBHOOK:-}
-      - ALERT_EMAIL=${ALERT_EMAIL:-}
+      
+      # Admin access - add your IP
+      - ADMIN_IP_ALLOWLIST=${ADMIN_IP_ALLOWLIST:-127.0.0.1,::1,172.16.0.0/12,192.168.0.0/16}
+      
+      # Drip configuration
       - DRIP_AMOUNT_NEW=${DRIP_AMOUNT_NEW:-0.5}
       - DRIP_AMOUNT_TRUSTED=${DRIP_AMOUNT_TRUSTED:-1.0}
       - COOLDOWN_NEW=${COOLDOWN_NEW:-48}
       - COOLDOWN_TRUSTED=${COOLDOWN_TRUSTED:-24}
       - POW_DIFFICULTY=${POW_DIFFICULTY:-4}
-    read_only: true
-    tmpfs:
-      - /tmp
+      
+      # Alerts (optional)
+      - DISCORD_WEBHOOK=${DISCORD_WEBHOOK:-}
+      - ALERT_EMAIL=${ALERT_EMAIL:-}
+    
+    # Security hardening
     security_opt:
       - no-new-privileges:true
     cap_drop:
       - ALL
+    
     networks:
       - faucet-net
-    healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
 volumes:
   drip-data:
+    name: timpi-drip-data
 
 networks:
   faucet-net:
+    name: timpi-drip-net
