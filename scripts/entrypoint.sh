@@ -2,9 +2,14 @@
 set -e
 
 KEYSTORE_FILE="${KEYSTORE_PATH:-/app/data/keystore.enc}"
+CERT_FILE="${SSL_CERT_PATH:-/app/certs/self.crt}"
+KEY_FILE="${SSL_KEY_PATH:-/app/certs/self.key}"
+CERT_CN="${SSL_CERT_CN:-drip.clawpurse.ai}"
+GENERATE_TLS="${GENERATE_SELF_SIGNED_SSL:-true}"
 
-# Ensure data directory exists
+# Ensure data and cert directories exist
 mkdir -p /app/data
+mkdir -p "$(dirname "$CERT_FILE")"
 
 # Check if wallet needs initialization
 if [ ! -f "$KEYSTORE_FILE" ]; then
@@ -60,6 +65,16 @@ if [ ! -f "$KEYSTORE_FILE" ]; then
   echo "Wallet initialized. Waiting for funding..."
   echo "Checking balance every 30 seconds."
   echo ""
+fi
+
+# Generate self-signed certificate if needed
+if [ "$GENERATE_TLS" != "false" ] && { [ ! -f "$CERT_FILE" ] || [ ! -f "$KEY_FILE" ]; }; then
+  echo "Generating self-signed TLS certificate for $CERT_CN..."
+  openssl req -x509 -newkey rsa:2048 -sha256 -days 365 -nodes \
+    -subj "/CN=$CERT_CN" \
+    -keyout "$KEY_FILE" \
+    -out "$CERT_FILE"
+  chmod 600 "$CERT_FILE" "$KEY_FILE"
 fi
 
 # Wait for funding (if balance too low)

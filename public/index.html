@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timpi Drip — Community Faucet</title>
-  <meta name="description" content="Free NTMPI tokens for humans and AI agents. Community faucet by Mhue.ai">
+  <title>Timpi Drip Faucet – Free NTMPI for DePIN & Agentic AI</title>
+  <meta name="description" content="Staking-backed Timpi faucet powered by ClawPurse. Proof-of-work instead of CAPTCHA, OpenClaw agent priority lane, and transparent treasury status.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -167,6 +167,18 @@
       margin-bottom: 8px;
       color: var(--text-secondary);
       font-size: 0.9rem;
+    }
+
+    .helper-link {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      display: inline-block;
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    .helper-link:hover {
+      text-decoration: underline;
     }
 
     .address-input {
@@ -433,6 +445,17 @@
       border: 1px solid var(--border);
     }
 
+    .info-details {
+      margin-top: 16px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      padding-left: 18px;
+    }
+
+    .info-details li {
+      margin-bottom: 8px;
+    }
+
     .info-section h3 {
       font-size: 1rem;
       margin-bottom: 12px;
@@ -572,7 +595,7 @@
 
     <!-- Donate Banner - subtle, centered -->
     <div class="donate-banner">
-      <p><strong>Help keep the faucet flowing!</strong> Donate to refill the pool:</p>
+      <p><strong>Staking-backed faucet.</strong> 95k NTMPI stays staked via ClawPurse, 5k stays liquid for daily drips. Refill the buffer:</p>
       <code class="donate-banner-address" id="donate-address-top" onclick="copyAddress(this, 'faucet')" title="Click to copy">
         Loading...
       </code>
@@ -604,6 +627,7 @@
           autocomplete="off"
           spellcheck="false"
         >
+        <a class="helper-link" href="https://clawpurse.ai" target="_blank" rel="noopener">Need a wallet? Grab ClawPurse →</a>
       </div>
 
       <div class="toggle-group">
@@ -670,12 +694,21 @@
           </div>
         </div>
       </div>
+      <ul class="info-details">
+        <li>Funding split: <strong>95k NTMPI staked</strong> with Neutaro validators, <strong>5k liquid</strong> for daily drips.</li>
+        <li>Trust upgrade when wallets are &gt;7 days old, have 3+ on-chain txs, social proof, or an OpenClaw attestation.</li>
+        <li>Proof-of-work challenge replaces CAPTCHA so human + agentic AI flows both work.</li>
+        <li>Admin panel enforces IP allowlists (<code>10.10.30.0/24</code> for Zach) and logs everything through ClawPurse receipts.</li>
+      </ul>
+      <p style="margin-top:16px; color: var(--text-secondary);">
+        Need a Neutaro wallet before you drip? <a href="https://clawpurse.ai" target="_blank">Download ClawPurse</a> for local-only key management. Want the full treasury math? <a href="https://clawpurse.ai#staking" target="_blank">Here’s how ClawPurse keeps Timpi Drip funded →</a>
+      </p>
     </div>
 
     <!-- Tip Section - ClawPurse.ai style -->
     <section class="tip-section">
-      <h2>Fuel Future Wallet Work</h2>
-      <p>If Timpi Drip helped you get started, tip the builders a Timpi coffee. Every contribution keeps the guardrails sharp.</p>
+      <h2>Fuel Future Faucet Work</h2>
+      <p>If Timpi Drip is bringing you value, tip the builder—ClawPurse is saving your node hours of ops time. Every contribution keeps the guardrails sharp.</p>
       <div class="tip-box">
         <p class="tip-box-title">Buy Mhue a Timpi coffee ☕</p>
         <code class="tip-box-address" id="tip-address" onclick="copyAddress(this, 'tip')" title="Click to copy">
@@ -931,6 +964,38 @@
     // Refresh periodically
     setInterval(loadStats, 30000);
     setInterval(loadFeed, 15000);
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How often can I receive a Timpi drip?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "New wallets receive 0.5 NTMPI every 48 hours. Trusted wallets (age > 7 days, 3+ txs, social proof, or OpenClaw attestation) receive 1.0 NTMPI every 24 hours."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How is the faucet funded?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "95,000 NTMPI stays staked through ClawPurse at a 17% APY assumption while 5,000 NTMPI remains liquid. Donations sent to the faucet wallet grow the treasury."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why use proof-of-work instead of CAPTCHA?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Proof-of-work keeps the faucet friendly to agentic AI and screen-reader users. The lightweight SHA-256 puzzle throttles abuse without relying on third-party CAPTCHA services."
+        }
+      }
+    ]
+  }
   </script>
 </body>
 </html>

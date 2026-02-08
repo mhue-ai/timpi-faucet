@@ -1,5 +1,5 @@
 // Timpi Drip - Community faucet for NTMPI tokens
-import Fastify from 'fastify';
+import Fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
 import fastifyCookie from '@fastify/cookie';
@@ -8,7 +8,7 @@ import { initDatabase } from './db/index.js';
 import { registerRoutes } from './api/routes.js';
 import { registerAdminRoutes } from './admin/routes.js';
 import { registerSecurityMiddleware } from './middleware/security.js';
-import { mkdirSync, existsSync } from 'fs';
+import { mkdirSync, existsSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -27,59 +27,74 @@ validateConfig();
 console.log('Initializing database...');
 initDatabase();
 
-// Create Fastify instance
-const app = Fastify({
-  logger: {
-    level: 'info',
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        translateTime: 'HH:MM:ss Z',
-        ignore: 'pid,hostname',
-      },
+const loggerOptions = {
+  level: 'info',
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      translateTime: 'HH:MM:ss Z',
+      ignore: 'pid,hostname',
     },
   },
-  trustProxy: true,
-});
+};
 
-// Register CORS
-await app.register(cors, {
-  origin: true,
-  methods: ['GET', 'POST'],
-  credentials: true,
-});
+async function registerPlugins(server: FastifyInstance) {
+  await server.register(cors, {
+    origin: true,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  });
 
-// Register cookies
-await app.register(fastifyCookie, {
-  secret: CONFIG.adminPassword, // Used for signing
-});
+  await server.register(fastifyCookie, {
+    secret: CONFIG.adminPassword,
+  });
 
-// Serve static files
-await app.register(fastifyStatic, {
-  root: join(__dirname, '..', 'public'),
-  prefix: '/',
-});
+  await server.register(fastifyStatic, {
+    root: join(__dirname, '..', 'public'),
+    prefix: '/',
+  });
 
-// Register security middleware
-await registerSecurityMiddleware(app);
+  await registerSecurityMiddleware(server);
+  await registerRoutes(server);
+  await registerAdminRoutes(server);
+}
 
-// Register API routes
-await registerRoutes(app);
+async function buildServer(options: FastifyServerOptions = {}) {
+  const server = Fastify({
+    logger: loggerOptions,
+    trustProxy: true,
+    ...options,
+  });
 
-// Register Admin routes
-await registerAdminRoutes(app);
+  await registerPlugins(server);
+  return server;
+}
 
-// Start server
-const start = async () => {
-  try {
-    await app.listen({ port: CONFIG.port, host: CONFIG.host });
-    console.log(`
+let httpsServer: FastifyInstance;
+
+try {
+  const tlsOptions = {
+    https: {
+      allowHTTP1: true,
+      key: readFileSync(CONFIG.sslKeyPath, 'utf8'),
+      cert: readFileSync(CONFIG.sslCertPath, 'utf8'),
+    },
+  } as unknown as FastifyServerOptions;
+
+  httpsServer = await buildServer(tlsOptions);
+} catch (error) {
+  console.error('Failed to load TLS certificate or key:', error);
+  process.exit(1);
+}
+
+const printBanner = (port: number, protocolLabel: string) => {
+  console.log(`
 ╔══════════════════════════════════════════════════════════════╗
 ║                      TIMPI DRIP                              ║
 ║                  Community Faucet by Mhue.ai                 ║
 ╠══════════════════════════════════════════════════════════════╣
-║ Status: 🟢 RUNNING                                           ║
-║ Port: ${CONFIG.port.toString().padEnd(55)}║
+║ Status: 🟢 RUNNING (${protocolLabel})                               ║
+║ Port: ${port.toString().padEnd(55)}║
 ║ Admin Port: ${CONFIG.adminPort.toString().padEnd(49)}║
 ║ Database: ${CONFIG.dbPath.padEnd(51)}║
 ╠══════════════════════════════════════════════════════════════╣
@@ -88,23 +103,25 @@ const start = async () => {
 ║ PoW difficulty: ${CONFIG.powDifficulty} leading zeros                              ║
 ╚══════════════════════════════════════════════════════════════╝
 `);
+};
+
+const start = async () => {
+  try {
+    await httpsServer.listen({ port: CONFIG.port, host: CONFIG.host });
+    printBanner(CONFIG.port, 'HTTPS');
   } catch (err) {
-    app.log.error(err);
+    console.error(err);
     process.exit(1);
   }
 };
 
 start();
 
-// Graceful shutdown
-process.on('SIGINT', async () => {
+const shutdown = async () => {
   console.log('\nShutting down...');
-  await app.close();
+  await httpsServer.close();
   process.exit(0);
-});
+};
 
-process.on('SIGTERM', async () => {
-  console.log('\nShutting down...');
-  await app.close();
-  process.exit(0);
-});
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);

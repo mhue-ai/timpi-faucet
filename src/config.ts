@@ -6,6 +6,12 @@ export const CONFIG = {
   port: parseInt(process.env.PORT || '3000'),
   adminPort: parseInt(process.env.ADMIN_PORT || '3001'),
   host: process.env.HOST || '0.0.0.0',
+
+  // TLS (required for web traffic)
+  sslCertPath: process.env.SSL_CERT_PATH || '/app/certs/self.crt',
+  sslKeyPath: process.env.SSL_KEY_PATH || '/app/certs/self.key',
+  sslCertCn: process.env.SSL_CERT_CN || 'drip.clawpurse.ai',
+  generateSelfSignedSsl: process.env.GENERATE_SELF_SIGNED_SSL !== 'false',
   
   // Wallet
   walletPassword: process.env.FAUCET_WALLET_PASSWORD || '',
@@ -66,6 +72,10 @@ export function validateConfig(): void {
   
   if (!CONFIG.adminPassword) {
     errors.push('ADMIN_PASSWORD is required');
+  }
+
+  if (!CONFIG.sslCertPath || !CONFIG.sslKeyPath) {
+    errors.push('SSL_CERT_PATH and SSL_KEY_PATH are required for HTTPS');
   }
   
   if (errors.length > 0) {
