@@ -223,7 +223,7 @@ export async function processDrip(request: DripRequest): Promise<DripResult> {
   
   // Load wallet and send
   try {
-    if (!await keystoreExists()) {
+    if (!await keystoreExists(CONFIG.keystorePath)) {
       return { success: false, error: 'Faucet wallet not configured', errorCode: 'WALLET_ERROR' };
     }
     
