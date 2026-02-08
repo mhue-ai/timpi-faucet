@@ -24,7 +24,7 @@ RUN npm run build
 FROM node:22-alpine
 
 # Install bc + openssl for balance checks and TLS generation
-RUN apk add --no-cache bc openssl
+RUN apk add --no-cache bc openssl libcap
 
 # Security: Create non-root user
 RUN addgroup -g 1001 faucet && adduser -u 1001 -G faucet -s /bin/sh -D faucet
@@ -36,6 +36,9 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/public ./public
+
+# Allow node binary to bind to privileged ports (e.g. 443) while running as non-root
+RUN setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
 # Copy entrypoint script
 COPY scripts/entrypoint.sh /entrypoint.sh
@@ -49,17 +52,17 @@ USER faucet
 
 # Environment defaults
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=443
 ENV HOST=0.0.0.0
 ENV DB_PATH=/app/data/faucet.db
 ENV KEYSTORE_PATH=/app/data/keystore.enc
 
 # Expose port
-EXPOSE 3000
+EXPOSE 443
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-  CMD wget -qO- http://localhost:3000/health || exit 1
+  CMD wget --no-check-certificate -qO- https://localhost:${PORT}/health || exit 1
 
 # Entrypoint handles wallet init
 ENTRYPOINT ["/entrypoint.sh"]

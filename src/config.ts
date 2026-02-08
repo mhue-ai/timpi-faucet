@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 export const CONFIG = {
   // Server
-  port: parseInt(process.env.PORT || '3000'),
+  port: parseInt(process.env.PORT || '443'),
   adminPort: parseInt(process.env.ADMIN_PORT || '3001'),
   host: process.env.HOST || '0.0.0.0',
 
