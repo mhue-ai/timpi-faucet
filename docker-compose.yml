@@ -4,7 +4,7 @@ services:
     container_name: timpi-drip
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "443:443"
     volumes:
       # Persist wallet and database
       - drip-data:/app/data
@@ -34,8 +34,7 @@ services:
     # Security hardening
     security_opt:
       - no-new-privileges:true
-    cap_drop:
-      - ALL
+    # Note: cap_drop: ALL blocks network for balance checks; omitted for now
     
     networks:
       - faucet-net
