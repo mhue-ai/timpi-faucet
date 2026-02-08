@@ -22,23 +22,22 @@ if [ ! -f "$KEYSTORE_FILE" ]; then
   echo "Initializing new faucet wallet..."
   echo ""
   
-  # Use ClawPurse to init wallet (ESM compatible)
+  # Use ClawPurse to generate and save wallet
   node --input-type=module -e "
-    import { initWallet } from 'clawpurse';
+    import { generateWallet, saveKeystore } from 'clawpurse';
     
-    const result = await initWallet(process.env.FAUCET_WALLET_PASSWORD, {
-      keystorePath: '$KEYSTORE_FILE'
-    });
+    const wallet = await generateWallet();
+    await saveKeystore(wallet.wallet, process.env.FAUCET_WALLET_PASSWORD, '$KEYSTORE_FILE');
     
     console.log('═══════════════════════════════════════════════════════════════');
     console.log('  FAUCET WALLET CREATED');
     console.log('═══════════════════════════════════════════════════════════════');
     console.log('');
-    console.log('  Address: ' + result.address);
+    console.log('  Address: ' + wallet.address);
     console.log('');
     console.log('  ⚠️  SAVE YOUR MNEMONIC - SHOWN ONCE ONLY:');
     console.log('');
-    console.log('  ' + result.mnemonic);
+    console.log('  ' + wallet.mnemonic);
     console.log('');
     console.log('═══════════════════════════════════════════════════════════════');
     console.log('');
