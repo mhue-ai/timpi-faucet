@@ -5,6 +5,9 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+# Install git (needed for GitHub dependencies)
+RUN apk add --no-cache git
+
 # Copy package files
 COPY package*.json ./
 
