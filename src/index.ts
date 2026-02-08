@@ -2,9 +2,11 @@
 import Fastify from 'fastify';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
+import fastifyCookie from '@fastify/cookie';
 import { CONFIG, validateConfig } from './config.js';
 import { initDatabase } from './db/index.js';
 import { registerRoutes } from './api/routes.js';
+import { registerAdminRoutes } from './admin/routes.js';
 import { mkdirSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
@@ -43,6 +45,12 @@ const app = Fastify({
 await app.register(cors, {
   origin: true,
   methods: ['GET', 'POST'],
+  credentials: true,
+});
+
+// Register cookies
+await app.register(fastifyCookie, {
+  secret: CONFIG.adminPassword, // Used for signing
 });
 
 // Serve static files
@@ -53,6 +61,9 @@ await app.register(fastifyStatic, {
 
 // Register API routes
 await registerRoutes(app);
+
+// Register Admin routes
+await registerAdminRoutes(app);
 
 // Start server
 const start = async () => {

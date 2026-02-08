@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timpi Drip — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-deep: #050810;
+      --bg-surface: #0a0f1a;
+      --bg-elevated: #111827;
+      --cyan: #00e5cc;
+      --cyan-glow: rgba(0, 229, 204, 0.2);
+      --coral: #ff4d4d;
+      --text-primary: #f0f4ff;
+      --text-secondary: #8892b0;
+      --text-muted: #5a6377;
+      --border: rgba(136, 146, 176, 0.15);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --font-display: 'Space Grotesk', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: var(--font-display);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Login Screen */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-card h1 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .login-card p {
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    /* Dashboard */
+    .dashboard {
+      display: none;
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .dashboard.visible {
+      display: block;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    /* Kill Switch */
+    .kill-switch {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: var(--bg-surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .kill-switch.disabled {
+      border-color: var(--error);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background: var(--bg-deep);
+      border-radius: 26px;
+      transition: 0.3s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: var(--text-muted);
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    input:checked + .slider {
+      background: var(--success);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(22px);
+      background: white;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    /* Cards */
+    .card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* Stats */
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .stat-item {
+      padding: 16px;
+      background: var(--bg-surface);
+      border-radius: 12px;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--cyan);
+      font-family: var(--font-mono);
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Form Elements */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"] {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-family: var(--font-mono);
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text-primary);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--cyan);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 12px 24px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      font-family: var(--font-display);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #00b8a9);
+      color: var(--bg-deep);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px var(--cyan-glow);
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.2);
+      color: var(--error);
+      border: 1px solid var(--error);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+    }
+
+    tr:hover td {
+      background: var(--bg-surface);
+    }
+
+    /* Logs */
+    .log-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+
+    .log-item:last-child {
+      border-bottom: none;
+    }
+
+    .log-time {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+    }
+
+    .log-event {
+      color: var(--cyan);
+      font-weight: 500;
+    }
+
+    .log-details {
+      color: var(--text-secondary);
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    /* Validator list */
+    .validator-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      background: var(--bg-surface);
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .validator-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .validator-name {
+      font-weight: 500;
+    }
+
+    .validator-address {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* Alert */
+    .alert {
+      padding: 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .alert.visible {
+      display: block;
+    }
+
+    .alert-success {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid var(--error);
+      color: var(--error);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+      }
+
+      .stat-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <h1>🔐 Admin Login</h1>
+      <p>Timpi Drip Control Panel</p>
+      
+      <div id="login-alert" class="alert"></div>
+      
+      <form onsubmit="login(event)">
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter admin password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="dashboard" id="dashboard">
+    <div class="header">
+      <h1>⚙️ Timpi Drip Admin</h1>
+      <div class="header-actions">
+        <div class="kill-switch" id="kill-switch">
+          <span>Faucet</span>
+          <label class="switch">
+            <input type="checkbox" id="faucet-toggle" onchange="toggleFaucet()">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div id="dashboard-alert" class="alert"></div>
+
+    <!-- Stats Row -->
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💰 Wallet</span>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-value" id="wallet-liquid">--</div>
+            <div class="stat-label">Liquid Balance</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="wallet-staked">--</div>
+            <div class="stat-label">Staked</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="wallet-total">--</div>
+            <div class="stat-label">Total</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="drips-today">--</div>
+            <div class="stat-label">Drips Today</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📊 Weekly Stats</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Drips</th>
+                <th>Agents</th>
+                <th>Humans</th>
+              </tr>
+            </thead>
+            <tbody id="weekly-stats">
+              <tr><td colspan="4" style="text-align: center;">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Config Row -->
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💧 Drip Configuration</span>
+          <button class="btn btn-primary btn-sm" onclick="saveDripConfig()">Save</button>
+        </div>
+        <div class="form-group">
+          <label>Drip Amount (New)</label>
+          <input type="number" id="config-drip-new" step="0.1" min="0">
+        </div>
+        <div class="form-group">
+          <label>Drip Amount (Trusted)</label>
+          <input type="number" id="config-drip-trusted" step="0.1" min="0">
+        </div>
+        <div class="form-group">
+          <label>Cooldown New (hours)</label>
+          <input type="number" id="config-cooldown-new" min="1">
+        </div>
+        <div class="form-group">
+          <label>Cooldown Trusted (hours)</label>
+          <input type="number" id="config-cooldown-trusted" min="1">
+        </div>
+        <div class="form-group">
+          <label>PoW Difficulty (leading zeros)</label>
+          <input type="number" id="config-pow" min="1" max="8">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🥩 Staking Configuration</span>
+          <button class="btn btn-primary btn-sm" onclick="saveStakingConfig()">Save</button>
+        </div>
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 12px;">
+            <input type="checkbox" id="config-auto-restake">
+            Auto-Restake Enabled
+          </label>
+        </div>
+        <div class="form-group">
+          <label>Restake Threshold (NTMPI)</label>
+          <input type="number" id="config-restake-threshold" min="0">
+        </div>
+        <div class="form-group">
+          <label>Liquid Buffer Target (NTMPI)</label>
+          <input type="number" id="config-liquid-buffer" min="0">
+        </div>
+        
+        <div class="card-header" style="margin-top: 24px;">
+          <span class="card-title">Validators</span>
+        </div>
+        <div id="validator-list"></div>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <input type="text" id="new-validator" placeholder="neutarovaloper1..." style="flex: 1;">
+          <button class="btn btn-secondary btn-sm" onclick="addValidator()">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logs -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📋 Audit Log</span>
+        <button class="btn btn-secondary btn-sm" onclick="loadDashboard()">Refresh</button>
+      </div>
+      <div class="log-list" id="audit-logs">
+        <div class="log-item" style="text-align: center; color: var(--text-muted);">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let sessionId = localStorage.getItem('admin_session');
+
+    // Check existing session
+    if (sessionId) {
+      showDashboard();
+      loadDashboard();
+    }
+
+    async function login(e) {
+      e.preventDefault();
+      const password = document.getElementById('password').value;
+      const alert = document.getElementById('login-alert');
+      
+      try {
+        const response = await fetch('/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+          sessionId = data.sessionId;
+          localStorage.setItem('admin_session', sessionId);
+          showDashboard();
+          loadDashboard();
+        } else {
+          showAlert(alert, 'error', data.error || 'Login failed');
+        }
+      } catch (err) {
+        showAlert(alert, 'error', 'Network error');
+      }
+    }
+
+    async function logout() {
+      await fetch('/admin/logout', {
+        method: 'POST',
+        headers: { 'X-Admin-Session': sessionId }
+      });
+      localStorage.removeItem('admin_session');
+      sessionId = null;
+      document.getElementById('login-screen').style.display = 'flex';
+      document.getElementById('dashboard').classList.remove('visible');
+    }
+
+    function showDashboard() {
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('dashboard').classList.add('visible');
+    }
+
+    async function loadDashboard() {
+      try {
+        const response = await fetch('/admin/dashboard', {
+          headers: { 'X-Admin-Session': sessionId }
+        });
+        
+        if (response.status === 401) {
+          logout();
+          return;
+        }
+        
+        const data = await response.json();
+        
+        // Update wallet stats
+        document.getElementById('wallet-liquid').textContent = data.wallet.liquid.toFixed(2);
+        document.getElementById('wallet-staked').textContent = data.wallet.staked.toFixed(2);
+        document.getElementById('wallet-total').textContent = (data.wallet.liquid + data.wallet.staked).toFixed(2);
+        document.getElementById('drips-today').textContent = data.stats.total_drips;
+        
+        // Update faucet toggle
+        const toggle = document.getElementById('faucet-toggle');
+        toggle.checked = data.faucetEnabled;
+        document.getElementById('kill-switch').classList.toggle('disabled', !data.faucetEnabled);
+        
+        // Update config fields
+        document.getElementById('config-drip-new').value = data.config.dripAmountNew;
+        document.getElementById('config-drip-trusted').value = data.config.dripAmountTrusted;
+        document.getElementById('config-cooldown-new').value = data.config.cooldownNew;
+        document.getElementById('config-cooldown-trusted').value = data.config.cooldownTrusted;
+        document.getElementById('config-pow').value = data.config.powDifficulty;
+        
+        // Update staking config
+        document.getElementById('config-auto-restake').checked = data.staking.auto_restake_enabled;
+        document.getElementById('config-restake-threshold').value = data.staking.auto_restake_threshold;
+        document.getElementById('config-liquid-buffer').value = data.staking.liquid_buffer_target;
+        
+        // Update weekly stats
+        const weeklyBody = document.getElementById('weekly-stats');
+        if (data.weekStats.length === 0) {
+          weeklyBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No data yet</td></tr>';
+        } else {
+          weeklyBody.innerHTML = data.weekStats.map(s => `
+            <tr>
+              <td>${s.date}</td>
+              <td>${s.total_drips}</td>
+              <td>${s.agent_drips}</td>
+              <td>${s.human_drips}</td>
+            </tr>
+          `).join('');
+        }
+        
+        // Update validators
+        const validatorList = document.getElementById('validator-list');
+        if (data.validators.length === 0) {
+          validatorList.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">No validators configured</p>';
+        } else {
+          validatorList.innerHTML = data.validators.map(v => `
+            <div class="validator-item">
+              <div class="validator-info">
+                <span class="validator-name">${v.moniker || 'Unknown'}</span>
+                <span class="validator-address">${v.operator_address.slice(0, 20)}...${v.operator_address.slice(-6)}</span>
+              </div>
+              <button class="btn btn-danger btn-sm" onclick="removeValidator('${v.operator_address}')">Remove</button>
+            </div>
+          `).join('');
+        }
+        
+        // Update audit logs
+        const logsContainer = document.getElementById('audit-logs');
+        if (data.auditLogs.length === 0) {
+          logsContainer.innerHTML = '<div class="log-item" style="text-align: center; color: var(--text-muted);">No logs yet</div>';
+        } else {
+          logsContainer.innerHTML = data.auditLogs.map(log => `
+            <div class="log-item">
+              <div class="log-time">${new Date(log.created_at).toLocaleString()}</div>
+              <div><span class="log-event">${log.event_type}</span> ${log.actor ? `by ${log.actor}` : ''} ${log.ip_address ? `from ${log.ip_address}` : ''}</div>
+              ${log.details ? `<div class="log-details">${log.details}</div>` : ''}
+            </div>
+          `).join('');
+        }
+        
+      } catch (err) {
+        console.error('Failed to load dashboard:', err);
+      }
+    }
+
+    async function toggleFaucet() {
+      const enabled = document.getElementById('faucet-toggle').checked;
+      
+      try {
+        await fetch('/admin/faucet/toggle', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Admin-Session': sessionId 
+          },
+          body: JSON.stringify({ enabled })
+        });
+        
+        document.getElementById('kill-switch').classList.toggle('disabled', !enabled);
+        showAlert(document.getElementById('dashboard-alert'), 'success', 
+          enabled ? 'Faucet enabled' : 'Faucet disabled');
+      } catch (err) {
+        showAlert(document.getElementById('dashboard-alert'), 'error', 'Failed to toggle faucet');
+      }
+    }
+
+    async function saveDripConfig() {
+      const config = {
+        dripAmountNew: parseFloat(document.getElementById('config-drip-new').value),
+        dripAmountTrusted: parseFloat(document.getElementById('config-drip-trusted').value),
+        cooldownNew: parseInt(document.getElementById('config-cooldown-new').value),
+        cooldownTrusted: parseInt(document.getElementById('config-cooldown-trusted').value),
+        powDifficulty: parseInt(document.getElementById('config-pow').value),
+      };
+      
+      try {
+        await fetch('/admin/config/drip', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Admin-Session': sessionId 
+          },
+          body: JSON.stringify(config)
+        });
+        
+        showAlert(document.getElementById('dashboard-alert'), 'success', 'Drip config saved');
+      } catch (err) {
+        showAlert(document.getElementById('dashboard-alert'), 'error', 'Failed to save config');
+      }
+    }
+
+    async function saveStakingConfig() {
+      const config = {
+        autoRestakeEnabled: document.getElementById('config-auto-restake').checked,
+        autoRestakeThreshold: document.getElementById('config-restake-threshold').value,
+        liquidBufferTarget: document.getElementById('config-liquid-buffer').value,
+      };
+      
+      try {
+        await fetch('/admin/staking/config', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Admin-Session': sessionId 
+          },
+          body: JSON.stringify(config)
+        });
+        
+        showAlert(document.getElementById('dashboard-alert'), 'success', 'Staking config saved');
+      } catch (err) {
+        showAlert(document.getElementById('dashboard-alert'), 'error', 'Failed to save config');
+      }
+    }
+
+    async function addValidator() {
+      const address = document.getElementById('new-validator').value.trim();
+      if (!address.startsWith('neutarovaloper')) {
+        showAlert(document.getElementById('dashboard-alert'), 'error', 'Invalid validator address');
+        return;
+      }
+      
+      try {
+        await fetch('/admin/validators/add', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Admin-Session': sessionId 
+          },
+          body: JSON.stringify({ operatorAddress: address, moniker: 'Validator' })
+        });
+        
+        document.getElementById('new-validator').value = '';
+        loadDashboard();
+      } catch (err) {
+        showAlert(document.getElementById('dashboard-alert'), 'error', 'Failed to add validator');
+      }
+    }
+
+    async function removeValidator(address) {
+      if (!confirm('Remove this validator?')) return;
+      
+      try {
+        await fetch('/admin/validators/remove', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Admin-Session': sessionId 
+          },
+          body: JSON.stringify({ operatorAddress: address })
+        });
+        
+        loadDashboard();
+      } catch (err) {
+        showAlert(document.getElementById('dashboard-alert'), 'error', 'Failed to remove validator');
+      }
+    }
+
+    function showAlert(element, type, message) {
+      element.className = `alert visible alert-${type}`;
+      element.textContent = message;
+      setTimeout(() => element.classList.remove('visible'), 3000);
+    }
+
+    // Auto-refresh
+    setInterval(loadDashboard, 60000);
+  </script>
+</body>
+</html>
