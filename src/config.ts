@@ -52,7 +52,7 @@ export const CONFIG = {
   dbPath: process.env.DB_PATH || './data/faucet.db',
   
   // Explorer
-  explorerBaseUrl: process.env.EXPLORER_URL || 'https://explorer.neutaro.io',
+  explorerBaseUrl: process.env.EXPLORER_URL || 'https://explorer.neutaro.io/Neutaro',
   
   // Tip address (for "buy me a coffee" - separate from faucet wallet)
   tipAddress: process.env.TIP_ADDRESS || 'neutaro1e8xal8tqdegu4w48z3fphemd3hc07gech3pfek',
