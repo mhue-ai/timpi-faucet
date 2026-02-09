@@ -242,6 +242,7 @@ export async function processDrip(request: DripRequest): Promise<DripResult> {
     const result = await send(wallet, faucetAddress, address, amount.toString(), {
       memo: `Timpi Drip - ${tier} tier`,
       skipConfirmation: true,
+      gasLimit: 100000, // Prevent out-of-gas errors
     });
     
     // Record drip
