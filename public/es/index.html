@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="es" dir="ltr">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Timpi Drip Faucet – Free NTMPI for DePIN & Agentic AI</title>
-  <meta name="description" content="Staking-backed Timpi faucet powered by ClawPurse. Proof-of-work instead of CAPTCHA, OpenClaw agent priority lane, and transparent treasury status.">
-  <link rel="canonical" href="https://drip.clawpurse.ai/">
+  <title>Timpi Drip Faucet – NTMPI gratis para DePIN e IA agéntica</title>
+  <meta name="description" content="Faucet Timpi respaldado por staking y potenciado por ClawPurse. Prueba de trabajo en lugar de CAPTCHA, carril prioritario para agentes OpenClaw y estado transparente de tesorería.">
+  <link rel="canonical" href="https://drip.clawpurse.ai/es/">
   <link rel="alternate" hreflang="en" href="https://drip.clawpurse.ai/" />
   <link rel="alternate" hreflang="ja" href="https://drip.clawpurse.ai/ja/" />
   <link rel="alternate" hreflang="ko" href="https://drip.clawpurse.ai/ko/" />
@@ -441,7 +441,7 @@
       text-decoration: underline;
     }
 
-    /* Live Feed */
+    /* Feed en vivo */
     .live-feed {
       background: var(--bg-elevated);
       border: 1px solid var(--border);
@@ -677,14 +677,14 @@
 <body>
   <div class="container">
     <header>
-      <div class="logo">🚰 COMMUNITY FAUCET</div>
+      <div class="logo">🚰 FAUCET COMUNITARIO</div>
       <h1>Timpi Drip</h1>
-      <p class="tagline">Free NTMPI for humans & AI agents</p>
-      <div style="position:absolute;top:16px;right:16px;"><select id="langSwitcher" aria-label="Language" onchange="window.location.href=this.value">
-            <option value="/" selected>English</option>
+      <p class="tagline">NTMPI gratis para humanos y agentes de IA</p>
+      <div style="position:absolute;top:16px;right:16px;"><select id="langSwitcher" aria-label="Idioma" onchange="window.location.href=this.value">
+            <option value="/">English</option>
             <option value="/ja/">日本語</option>
             <option value="/ko/">한국어</option>
-            <option value="/es/">Español</option>
+            <option value="/es/" selected>Español</option>
             <option value="/fr/">Français</option>
             <option value="/hi/">हिन्दी</option>
             <option value="/zh/">中文</option>
@@ -694,7 +694,7 @@
 
     <!-- Donate Banner - subtle, centered -->
     <div class="donate-banner">
-      <p><strong>Staking-backed faucet.</strong> Refill the buffer:</p>
+      <p><strong>Faucet respaldado por staking.</strong> Rellena el buffer:</p>
       <code class="donate-banner-address" id="donate-address-top" onclick="copyAddress(this, 'faucet')" title="Click to copy">
         Loading...
       </code>
@@ -703,21 +703,21 @@
     <div class="stats-bar">
       <div class="stat">
         <div class="stat-value" id="pool-balance">--</div>
-        <div class="stat-label">Pool Balance</div>
+        <div class="stat-label">Saldo del pool</div>
       </div>
       <div class="stat">
         <div class="stat-value" id="drips-today">--</div>
-        <div class="stat-label">Drips Today</div>
+        <div class="stat-label">Drips hoy</div>
       </div>
       <div class="stat">
         <div class="stat-value" id="agent-ratio">--</div>
-        <div class="stat-label">Agent Ratio</div>
+        <div class="stat-label">Ratio de agentes</div>
       </div>
     </div>
 
     <div class="drip-card">
       <div class="input-group">
-        <label for="address">Neutaro Address</label>
+        <label for="address">Dirección Neutaro</label>
         <input 
           type="text" 
           id="address" 
@@ -726,13 +726,13 @@
           autocomplete="off"
           spellcheck="false"
         >
-        <a class="helper-link" href="https://clawpurse.ai" target="_blank" rel="noopener">Need a wallet? Grab ClawPurse →</a>
+        <a class="helper-link" href="https://clawpurse.ai" target="_blank" rel="noopener">¿Necesitas una billetera? Obtén ClawPurse →</a>
       </div>
 
       <div class="toggle-group">
-        <button class="toggle-btn active" data-type="human" onclick="setUserType('human')">🧠 I'm Human</button>
+        <button class="toggle-btn active" data-type="human" onclick="setUserType('human')">🧠 Soy humano</button>
         <button class="toggle-btn" data-type="agent" onclick="setUserType('agent')">
-          🤖 I'm an Agent
+          🤖 Soy un agente
         </button>
       </div>
 
@@ -740,10 +740,10 @@
         <div class="progress-bar">
           <div class="progress-fill" id="progress-fill"></div>
         </div>
-        <div class="progress-text" id="progress-text">Solving proof of work...</div>
+        <div class="progress-text" id="progress-text">Resolviendo prueba de trabajo...</div>
       </div>
 
-      <button class="drip-btn" id="drip-btn" onclick="requestDrip()">💧 Get NTMPI</button>
+      <button class="drip-btn" id="drip-btn" onclick="requestDrip()">💧 Obtener NTMPI</button>
 
       <div class="result" id="result">
         <div class="result-title" id="result-title"></div>
@@ -752,76 +752,76 @@
     </div>
 
     <div class="wallet-cta-wrapper">
-      <button class="wallet-cta" onclick="openWalletModal()">Need a Neutaro wallet before you drip?</button>
+      <button class="wallet-cta" onclick="openWalletModal()">¿Necesitas una billetera Neutaro antes del drip?</button>
     </div>
 
     <div class="live-feed">
       <div class="feed-header">
         <div class="feed-title">
-          <span class="live-dot"></span>Live Feed
+          <span class="live-dot"></span>Feed en vivo
         </div>
       </div>
       <ul class="feed-list" id="feed-list">
-        <li class="feed-item" style="justify-content: center; color: var(--text-muted);">Loading...</li>
+        <li class="feed-item" style="justify-content: center; color: var(--text-muted);">Cargando...</li>
       </ul>
     </div>
 
     <div class="info-section">
-      <h3>How it works</h3>
+      <h3>Cómo funciona</h3>
       <div class="info-grid">
         <div>
           <div class="info-item">
-            <span class="info-label">New wallets</span>
+            <span class="info-label">Billeteras nuevas</span>
             <span class="info-value" id="drip-new">0.5 NTMPI</span>
           </div>
           <div class="info-item">
-            <span class="info-label">Trusted wallets</span>
+            <span class="info-label">Billeteras de confianza</span>
             <span class="info-value" id="drip-trusted">1.0 NTMPI</span>
           </div>
         </div>
         <div>
           <div class="info-item">
-            <span class="info-label">Cooldown (new)</span>
+            <span class="info-label">Enfriamiento (nuevas)</span>
             <span class="info-value" id="cooldown-new">48h</span>
           </div>
           <div class="info-item">
-            <span class="info-label">Cooldown (trusted)</span>
+            <span class="info-label">Enfriamiento (confianza)</span>
             <span class="info-value" id="cooldown-trusted">24h</span>
           </div>
         </div>
       </div>
       <ul class="info-details">
-        <li>Trust upgrade when wallets are >7 days old, have 3+ on-chain txs, social proof, or an OpenClaw attestation.</li>
-        <li>Proof-of-work challenge replaces CAPTCHA so human + agentic AI flows both work.</li>
+        <li>Mejora a confianza cuando la billetera tiene >7 días, 3+ txs on-chain, prueba social o atestación OpenClaw.</li>
+        <li>La prueba de trabajo reemplaza al CAPTCHA para que funcionen tanto los flujos humanos como los de IA agéntica.</li>
       </ul>
     </div>
 
     <!-- Tip Section - ClawPurse.ai style -->
     <section class="tip-section">
-      <h2>Fuel Future Faucet Work</h2>
-      <p>If Timpi Drip is bringing you value, tip the builder—ClawPurse is saving your node hours of ops time. Every contribution keeps the guardrails sharp.</p>
+      <h2>Impulsa el futuro del faucet</h2>
+      <p>Si Timpi Drip te aporta valor, dale una propina al constructor. ClawPurse está ahorrando horas de operación a tu nodo. Cada contribución mantiene los guardrails afilados.</p>
       <div class="tip-box">
-        <p class="tip-box-title">Buy Mhue a Timpi coffee ☕</p>
+        <p class="tip-box-title">Invita a Mhue un café Timpi ☕</p>
         <code class="tip-box-address" id="tip-address" onclick="copyAddress(this, 'tip')" title="Click to copy">
           Loading...
         </code>
-        <p class="tip-box-note">Memo optional — just let us know what you shipped!</p>
+        <p class="tip-box-note">Memo opcional — ¡cuéntanos qué lanzaste!</p>
       </div>
     </section>
   </div>
 
   <footer>
-    Community faucet by <a href="https://mhue.ai" target="_blank">Mhue.ai</a> •
-    Powered by <a href="https://clawpurse.ai" target="_blank">ClawPurse</a> •
+    Faucet comunitario por <a href="https://mhue.ai" target="_blank">Mhue.ai</a> •
+    Potenciado por <a href="https://clawpurse.ai" target="_blank">ClawPurse</a> •
     <a href="https://timpi.io" target="_blank">Timpi</a>
   </footer>
 
   <div class="modal-overlay" id="wallet-modal" onclick="overlayClick(event)">
     <div class="modal">
-      <h3>Need a Neutaro wallet before you drip?</h3>
-      <p>Grab ClawPurse for local-only key management in seconds.</p>
-      <a class="wallet-modal-link" href="https://clawpurse.ai" target="_blank">Visit ClawPurse →</a>
-      <button class="modal-close" onclick="closeWalletModal()">Close</button>
+      <h3>¿Necesitas una billetera Neutaro antes del drip?</h3>
+      <p>Obtén ClawPurse para gestión de claves local en segundos.</p>
+      <a class="wallet-modal-link" href="https://clawpurse.ai" target="_blank">Visitar ClawPurse →</a>
+      <button class="modal-close" onclick="closeWalletModal()">Cerrar</button>
     </div>
   </div>
 
@@ -857,7 +857,7 @@
         await navigator.clipboard.writeText(addr);
         element.classList.add('copied');
         const originalText = element.textContent;
-        element.textContent = '✓ Copied!';
+        element.textContent = '✓ ¡Copiado!';
         
         setTimeout(() => {
           element.classList.remove('copied');
@@ -899,7 +899,7 @@
           
           if (hashHex.startsWith(target)) {
             progressFill.style.width = '100%';
-            progressText.textContent = 'Solved!';
+            progressText.textContent = '¡Resuelto!';
             return { nonce: nonce.toString(), timestamp };
           }
           nonce++;
@@ -909,7 +909,7 @@
         const expectedAttempts = Math.pow(16, difficulty);
         const progress = Math.min((nonce / expectedAttempts) * 100, 95);
         progressFill.style.width = `${progress}%`;
-        progressText.textContent = `Solving... ${nonce.toLocaleString()} attempts (${((Date.now() - startTime) / 1000).toFixed(1)}s)`;
+        progressText.textContent = `Resolviendo... ${nonce.toLocaleString()} intentos (${((Date.now() - startTime) / 1000).toFixed(1)}s)`;
         
         // Yield to UI
         await new Promise(r => setTimeout(r, 0));
@@ -925,7 +925,7 @@
       
       // Validate
       if (!address.startsWith('neutaro1') || address.length !== 46) {
-        showResult('error', 'Invalid Address', 'Please enter a valid Neutaro address (starts with neutaro1)');
+        showResult('error', 'Dirección inválida', 'Ingresa una dirección Neutaro válida (empieza con neutaro1)');
         return;
       }
       
@@ -935,7 +935,7 @@
       // Update UI
       btn.disabled = true;
       btn.classList.add('loading');
-      btn.innerHTML = '⏳ Processing...';
+      btn.innerHTML = '⏳ Procesando...';
       result.classList.remove('visible');
       
       try {
@@ -944,7 +944,7 @@
         const difficulty = 4; // Will be fetched from API in production
         const pow = await solvePow(address, timestamp, difficulty);
         
-        btn.innerHTML = '📡 Sending...';
+        btn.innerHTML = '📡 Enviando...';
         
         // Submit request
         const response = await fetch('/api/drip', {
@@ -960,23 +960,23 @@
         const data = await response.json();
         
         if (data.success) {
-          showResult('success', '💧 Drip Successful!',
-            `${data.amount} NTMPI sent to your wallet.<br>
-            <a href="${data.explorerUrl}" target="_blank" class="result-link">View on Explorer →</a><br>
-            <small>Next drip: ${new Date(data.nextDripAt).toLocaleString()}</small>`
+          showResult('success', '💧 ¡Drip exitoso!',
+            `${data.amount} NTMPI enviados a tu billetera.<br>
+            <a href="${data.explorerUrl}" target="_blank" class="result-link">Ver en Explorer →</a><br>
+            <small>Próximo drip: ${new Date(data.nextDripAt).toLocaleString()}</small>`
           );
           loadFeed(); // Refresh feed
         } else {
-          showResult('error', 'Drip Failed', data.error || 'Unknown error occurred');
+          showResult('error', 'Drip fallido', data.error || 'Error desconocido');
         }
         
       } catch (err) {
-        showResult('error', 'Error', err.message || 'Network error. Please try again.');
+        showResult('error', 'Error', err.message || 'Error de red. Por favor, inténtalo de nuevo.');
       } finally {
         isProcessing = false;
         btn.disabled = false;
         btn.classList.remove('loading');
-        btn.innerHTML = '💧 Get NTMPI';
+        btn.innerHTML = '💧 Obtener NTMPI';
         powSection.classList.remove('visible');
         document.getElementById('progress-fill').style.width = '0%';
       }
@@ -1041,7 +1041,7 @@
         const feedList = document.getElementById('feed-list');
         
         if (drips.length === 0) {
-          feedList.innerHTML = '<li class="feed-item" style="justify-content: center; color: var(--text-muted);">No drips yet. Be the first!</li>';
+          feedList.innerHTML = '<li class="feed-item" style="justify-content: center; color: var(--text-muted);">Aún no hay drips. ¡Sé el primero!</li>';
           return;
         }
         
