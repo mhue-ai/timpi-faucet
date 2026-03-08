@@ -37,5 +37,9 @@
   "ecosystem_drip": "Grifo Drip — Obtén tokens NTMPI de prueba para probar el ecosistema",
   "footer_built": "Creado por",
   "footer_disclaimer": "Este sitio no proporciona asesoramiento financiero. Las criptomonedas son volátiles. Haz tu propia investigación.",
-  "lang_label": "Idioma"
+  "lang_label": "Idioma",
+  "swap_uniswap": "Intercambiar en Uniswap (DEX)",
+  "swap_mexc": "Comprar en MEXC",
+  "swap_fiat": "Tarjeta / Banco",
+  "swap_oraidex": "Intercambiar en OraiDEX (Cosmos)"
 }

@@ -37,5 +37,9 @@
   "ecosystem_drip": "ड्रिप फॉसेट — इकोसिस्टम आज़माने के लिए टेस्ट NTMPI टोकन प्राप्त करें",
   "footer_built": "द्वारा निर्मित",
   "footer_disclaimer": "यह साइट वित्तीय सलाह प्रदान नहीं करती। क्रिप्टोकरेंसी अस्थिर है। अपना शोध स्वयं करें।",
-  "lang_label": "भाषा"
+  "lang_label": "भाषा",
+  "swap_uniswap": "Uniswap पर स्वैप करें (DEX)",
+  "swap_mexc": "MEXC पर खरीदें",
+  "swap_fiat": "कार्ड / बैंक",
+  "swap_oraidex": "OraiDEX पर स्वैप करें (Cosmos)"
 }

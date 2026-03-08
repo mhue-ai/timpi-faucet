@@ -37,5 +37,9 @@
   "ecosystem_drip": "水龙头 — 获取测试NTMPI代币以试用生态系统",
   "footer_built": "构建者",
   "footer_disclaimer": "本站不提供财务建议。加密货币具有波动性。请自行研究。",
-  "lang_label": "语言"
+  "lang_label": "语言",
+  "swap_uniswap": "在Uniswap兑换 (DEX)",
+  "swap_mexc": "在MEXC购买",
+  "swap_fiat": "银行卡 / 银行",
+  "swap_oraidex": "在OraiDEX兑换 (Cosmos)"
 }

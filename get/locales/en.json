@@ -37,5 +37,9 @@
   "ecosystem_drip": "Drip Faucet — Get test NTMPI tokens to try the ecosystem",
   "footer_built": "Built by",
   "footer_disclaimer": "This site does not provide financial advice. Cryptocurrency is volatile. Do your own research.",
-  "lang_label": "Language"
+  "lang_label": "Language",
+  "swap_uniswap": "Swap on Uniswap (DEX)",
+  "swap_mexc": "Buy on MEXC",
+  "swap_fiat": "Card / Bank",
+  "swap_oraidex": "Swap on OraiDEX (Cosmos)"
 }

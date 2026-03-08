@@ -37,5 +37,9 @@
   "ecosystem_drip": "ドリップ蛇口 — エコシステムを試すためのテストNTMPIトークンを取得",
   "footer_built": "開発：",
   "footer_disclaimer": "このサイトは金融アドバイスを提供しません。暗号通貨は変動性があります。ご自身で調査してください。",
-  "lang_label": "言語"
+  "lang_label": "言語",
+  "swap_uniswap": "Uniswapでスワップ (DEX)",
+  "swap_mexc": "MEXCで購入",
+  "swap_fiat": "カード / 銀行",
+  "swap_oraidex": "OraiDEXでスワップ (Cosmos)"
 }

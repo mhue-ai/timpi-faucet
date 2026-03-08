@@ -37,5 +37,9 @@
   "ecosystem_drip": "Robinet Drip — Obtenez des jetons NTMPI de test pour essayer l'écosystème",
   "footer_built": "Créé par",
   "footer_disclaimer": "Ce site ne fournit pas de conseils financiers. Les cryptomonnaies sont volatiles. Faites vos propres recherches.",
-  "lang_label": "Langue"
+  "lang_label": "Langue",
+  "swap_uniswap": "Échanger sur Uniswap (DEX)",
+  "swap_mexc": "Acheter sur MEXC",
+  "swap_fiat": "Carte / Banque",
+  "swap_oraidex": "Échanger sur OraiDEX (Cosmos)"
 }

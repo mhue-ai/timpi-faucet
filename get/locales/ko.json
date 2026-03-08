@@ -37,5 +37,9 @@
   "ecosystem_drip": "드립 수도꼭지 — 생태계를 시험하기 위한 테스트 NTMPI 토큰 받기",
   "footer_built": "제작:",
   "footer_disclaimer": "이 사이트는 재정 자문을 제공하지 않습니다. 암호화폐는 변동성이 큽니다. 직접 조사하세요.",
-  "lang_label": "언어"
+  "lang_label": "언어",
+  "swap_uniswap": "Uniswap에서 스왑 (DEX)",
+  "swap_mexc": "MEXC에서 구매",
+  "swap_fiat": "카드 / 은행",
+  "swap_oraidex": "OraiDEX에서 스왑 (Cosmos)"
 }

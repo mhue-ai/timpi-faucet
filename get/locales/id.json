@@ -37,5 +37,9 @@
   "ecosystem_drip": "Keran Drip — Dapatkan token NTMPI uji coba untuk mencoba ekosistem",
   "footer_built": "Dibuat oleh",
   "footer_disclaimer": "Situs ini tidak memberikan saran keuangan. Mata uang kripto bersifat volatil. Lakukan riset Anda sendiri.",
-  "lang_label": "Bahasa"
+  "lang_label": "Bahasa",
+  "swap_uniswap": "Tukar di Uniswap (DEX)",
+  "swap_mexc": "Beli di MEXC",
+  "swap_fiat": "Kartu / Bank",
+  "swap_oraidex": "Tukar di OraiDEX (Cosmos)"
 }
