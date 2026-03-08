@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Obtener NTMPI — ClawPurse</title>
+  <meta name="description" content="La forma más sencilla de adquirir tokens NTMPI. Intercambia ETH, USDC o cualquier token ERC-20 por NTMPI directamente.">
+  <link rel="canonical" href="https://get.clawpurse.ai/es/">
+  <link rel="alternate" hreflang="en" href="https://get.clawpurse.ai/en/">
+  <link rel="alternate" hreflang="ja" href="https://get.clawpurse.ai/ja/">
+  <link rel="alternate" hreflang="ko" href="https://get.clawpurse.ai/ko/">
+  <link rel="alternate" hreflang="es" href="https://get.clawpurse.ai/es/">
+  <link rel="alternate" hreflang="fr" href="https://get.clawpurse.ai/fr/">
+  <link rel="alternate" hreflang="hi" href="https://get.clawpurse.ai/hi/">
+  <link rel="alternate" hreflang="zh" href="https://get.clawpurse.ai/zh/">
+  <link rel="alternate" hreflang="id" href="https://get.clawpurse.ai/id/">
+  <link rel="alternate" hreflang="x-default" href="https://get.clawpurse.ai/en/">
+  <meta property="og:title" content="Obtener NTMPI — ClawPurse">
+  <meta property="og:description" content="La forma más sencilla de adquirir tokens NTMPI. Intercambia ETH, USDC o cualquier token ERC-20 por NTMPI directamente.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://get.clawpurse.ai/es/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0e13;
+      --bg-surface: #13161d;
+      --bg-card: #13161d;
+      --border: #1e2230;
+      --border-hover: #2a2f40;
+      --text: #e2e4ea;
+      --text-dim: #8b8f9e;
+      --text-muted: #5c6070;
+      --accent: #f47458;
+      --accent-dim: rgba(244, 116, 88, 0.12);
+      --accent-glow: rgba(244, 116, 88, 0.15);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font: 'Outfit', -apple-system, sans-serif;
+      --mono: 'Fira Code', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+    a:hover { opacity: 0.8; }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .hero { padding: 64px 0 40px; text-align: center; position: relative; }
+    .hero::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 500px; height: 300px; background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%); opacity: 0.3; pointer-events: none; }
+    .hero h1 { font-size: clamp(36px, 6vw, 56px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px; position: relative; }
+    .hero p { font-size: 17px; color: var(--text-dim); max-width: 520px; margin: 0 auto; position: relative; }
+    .swap-section { padding: 32px 0 48px; display: flex; flex-direction: column; align-items: center; }
+    .swap-frame-wrap { width: 100%; max-width: 480px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .swap-frame-wrap iframe { width: 100%; height: 520px; border: none; }
+    .swap-note { margin-top: 16px; font-size: 13px; color: var(--text-muted); max-width: 480px; text-align: center; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 32px 0; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: border-color 0.3s; }
+    .card:hover { border-color: var(--border-hover); }
+    .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .card h3 .icon { color: var(--accent); font-size: 18px; }
+    .card p, .card li { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
+    .details-table { width: 100%; border-collapse: collapse; }
+    .details-table tr { border-bottom: 1px solid var(--border); }
+    .details-table tr:last-child { border-bottom: none; }
+    .details-table td { padding: 10px 0; font-size: 14px; }
+    .details-table td:first-child { color: var(--text-muted); white-space: nowrap; padding-right: 20px; width: 140px; }
+    .details-table td:last-child { color: var(--text); }
+    .mono { font-family: var(--mono); font-size: 12px; word-break: break-all; }
+    .steps { list-style: none; counter-reset: steps; }
+    .steps li { counter-increment: steps; padding: 8px 0 8px 36px; position: relative; font-size: 14px; color: var(--text-dim); }
+    .steps li::before { content: counter(steps); position: absolute; left: 0; top: 8px; width: 24px; height: 24px; background: var(--accent-dim); color: var(--accent); border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .eco-links { display: flex; flex-direction: column; gap: 12px; }
+    .eco-link { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--bg-surface); border-radius: var(--radius-sm); border: 1px solid var(--border); transition: border-color 0.2s; font-size: 14px; color: var(--text-dim); }
+    .eco-link:hover { border-color: var(--accent); opacity: 1; }
+    .eco-link .dot { width: 8px; height: 8px; min-width: 8px; background: var(--accent); border-radius: 50%; margin-top: 6px; }
+    footer { border-top: 1px solid var(--border); padding: 32px 0; margin-top: 48px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--text-muted); }
+    .footer-disclaimer { max-width: 480px; font-size: 12px; color: var(--text-muted); opacity: 0.6; }
+    .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; }
+    @media (max-width: 640px) { .hero { padding: 40px 0 24px; } .cards-grid { grid-template-columns: 1fr; } .footer-inner { flex-direction: column; text-align: center; } }
+  </style>
+</head>
+<body>
+
+  <!-- Shared ecosystem nav — served from clawpurse.ai -->
+  <script src="https://clawpurse.ai/nav.js"></script>
+
+  <section class="hero container">
+    <h1>Obtener NTMPI</h1>
+    <p>Intercambia cualquier token ERC-20 por NTMPI directamente desde tu billetera. Sin registro. Sin intermediarios. Impulsado por Uniswap.</p>
+  </section>
+
+  <section class="swap-section container">
+    <div class="swap-frame-wrap">
+      <iframe src="https://app.uniswap.org/#/swap?outputCurrency=0x53be7be0ce7f92bcbd2138305735160fb799be4f&chain=ethereum" title="Uniswap Swap Widget — Get NTMPI" allow="clipboard-write" loading="lazy"></iframe>
+    </div>
+    <p class="swap-note">Conecta tu billetera Ethereum (MetaMask, Rabby, etc.) para intercambiar. El widget enruta a través de Uniswap para la mejor tasa disponible.</p>
+  </section>
+
+  <div class="container">
+    <div class="cards-grid">
+      <div class="card">
+        <h3><span class="icon">◈</span> ¿Qué es NTMPI?</h3>
+        <p style="margin-bottom:12px">NTMPI es el token nativo de la blockchain Neutaro, que impulsa el ecosistema del motor de búsqueda descentralizado Timpi. Se utiliza para gobernanza, staking de validadores, recompensas de nodos y pagos en el mercado de datos Timpi.</p>
+        <p>La versión ERC-20 de NTMPI en Ethereum se puede puentear a la cadena nativa Neutaro a través de OraiDEX para participar en staking y gobernanza.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">⬡</span> Detalles del Token</h3>
+        <table class="details-table">
+          <tr><td>Contrato ERC-20</td><td><span class="mono"><a href="https://etherscan.io/token/0x53be7be0ce7f92bcbd2138305735160fb799be4f" target="_blank" rel="noopener">0x53be...be4f</a></span></td></tr>
+          <tr><td>Cadena Nativa</td><td>Neutaro (Cosmos SDK)</td></tr>
+          <tr><td>Suministro Máximo</td><td>400,000,000 NTMPI</td></tr>
+          <tr><td>Explorador</td><td><a href="https://explorer.neutaro.io/wallet/accounts" target="_blank" rel="noopener">explorer.neutaro.io</a></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <h3><span class="icon">↗</span> Otras Formas de Obtener NTMPI</h3>
+        <p style="margin-bottom:10px"><a href="https://www.mexc.com/exchange/NTMPI_USDT" target="_blank" rel="noopener">MEXC</a> — Opera NTMPI/USDT en MEXC — acepta tarjeta de crédito, transferencia bancaria, Apple Pay y P2P.</p>
+        <p style="margin-bottom:10px"><a href="https://oraidex.io" target="_blank" rel="noopener">OraiDEX</a> — Intercambio cross-chain en OraiDEX — puentea directamente a la cadena nativa Neutaro.</p>
+        <p>Después de adquirir NTMPI, delega a validadores Neutaro para recompensas de staking de ~17% APR.</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">⟁</span> Puente a Neutaro</h3>
+        <p style="margin-bottom:14px">El widget de intercambio entrega NTMPI ERC-20 en Ethereum. Para usar NTMPI para staking, gobernanza u operaciones de nodos, puentea tus tokens a la cadena nativa Neutaro:</p>
+        <ol class="steps">
+          <li><a href="https://oraidex.io/bridge" target="_blank" rel="noopener">Ve al Puente OraiDEX</a></li>
+          <li>Conecta tu billetera Ethereum y Keplr/OWallet</li>
+          <li>Puentea NTMPI de Ethereum → Oraichain → Neutaro</li>
+          <li><a href="https://explorer.neutaro.io/Neutaro/staking" target="_blank" rel="noopener">Delega a validadores en el Explorador Neutaro</a></li>
+        </ol>
+      </div>
+    </div>
+    <div style="padding: 32px 0;">
+      <p class="section-title">Ecosistema ClawPurse</p>
+      <div class="eco-links">
+        <a href="https://clawpurse.ai" class="eco-link"><span class="dot"></span><span>ClawPurse Wallet — Billetera de micropagos NTMPI para agentes de IA</span></a>
+        <a href="https://gateway.clawpurse.ai" class="eco-link"><span class="dot"></span><span>Payment Gateway — Gateway de micropagos HTTP 402 para monetización de API</span></a>
+        <a href="https://drip.clawpurse.ai" class="eco-link"><span class="dot"></span><span>Grifo Drip — Obtén tokens NTMPI de prueba para probar el ecosistema</span></a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <span>Creado por <a href="https://clawpurse.ai">ClawPurse</a></span>
+        <span class="footer-disclaimer">Este sitio no proporciona asesoramiento financiero. Las criptomonedas son volátiles. Haz tu propia investigación.</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
