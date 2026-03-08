@@ -18,7 +18,7 @@ export async function registerSecurityMiddleware(app: FastifyInstance) {
     // Content Security Policy
     reply.header('Content-Security-Policy', [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://clawpurse.ai", // Inline scripts + shared nav
+      "script-src 'self' 'unsafe-inline' https://clawpurse.ai https://static.cloudflareinsights.com", // Inline scripts + shared nav + CF analytics
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' https://fonts.gstatic.com",
       "img-src 'self' data:",
