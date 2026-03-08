@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="{{lang}}" dir="{{dir}}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{meta_title}}</title>
+  <meta name="description" content="{{meta_description}}">
+  <link rel="canonical" href="https://get.clawpurse.ai/{{lang}}/">
+  {{hreflang}}
+  <meta property="og:title" content="{{meta_title}}">
+  <meta property="og:description" content="{{meta_description}}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://get.clawpurse.ai/{{lang}}/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0c0e13;
+      --bg-surface: #13161d;
+      --bg-card: #13161d;
+      --border: #1e2230;
+      --border-hover: #2a2f40;
+      --text: #e2e4ea;
+      --text-dim: #8b8f9e;
+      --text-muted: #5c6070;
+      --accent: #f47458;
+      --accent-dim: rgba(244, 116, 88, 0.12);
+      --accent-glow: rgba(244, 116, 88, 0.15);
+      --radius: 12px;
+      --radius-sm: 8px;
+      --font: 'Outfit', -apple-system, sans-serif;
+      --mono: 'Fira Code', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
+    a:hover { opacity: 0.8; }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .hero { padding: 64px 0 40px; text-align: center; position: relative; }
+    .hero::before { content: ''; position: absolute; top: -60px; left: 50%; transform: translateX(-50%); width: 500px; height: 300px; background: radial-gradient(ellipse, var(--accent-glow) 0%, transparent 70%); opacity: 0.3; pointer-events: none; }
+    .hero h1 { font-size: clamp(36px, 6vw, 56px); font-weight: 700; letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 16px; position: relative; }
+    .hero p { font-size: 17px; color: var(--text-dim); max-width: 520px; margin: 0 auto; position: relative; }
+    .swap-section { padding: 32px 0 48px; display: flex; flex-direction: column; align-items: center; }
+    .swap-frame-wrap { width: 100%; max-width: 480px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+    .swap-frame-wrap iframe { width: 100%; height: 520px; border: none; }
+    .swap-note { margin-top: 16px; font-size: 13px; color: var(--text-muted); max-width: 480px; text-align: center; }
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 32px 0; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; transition: border-color 0.3s; }
+    .card:hover { border-color: var(--border-hover); }
+    .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+    .card h3 .icon { color: var(--accent); font-size: 18px; }
+    .card p, .card li { font-size: 14px; color: var(--text-dim); line-height: 1.7; }
+    .details-table { width: 100%; border-collapse: collapse; }
+    .details-table tr { border-bottom: 1px solid var(--border); }
+    .details-table tr:last-child { border-bottom: none; }
+    .details-table td { padding: 10px 0; font-size: 14px; }
+    .details-table td:first-child { color: var(--text-muted); white-space: nowrap; padding-right: 20px; width: 140px; }
+    .details-table td:last-child { color: var(--text); }
+    .mono { font-family: var(--mono); font-size: 12px; word-break: break-all; }
+    .steps { list-style: none; counter-reset: steps; }
+    .steps li { counter-increment: steps; padding: 8px 0 8px 36px; position: relative; font-size: 14px; color: var(--text-dim); }
+    .steps li::before { content: counter(steps); position: absolute; left: 0; top: 8px; width: 24px; height: 24px; background: var(--accent-dim); color: var(--accent); border-radius: 50%; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; }
+    .eco-links { display: flex; flex-direction: column; gap: 12px; }
+    .eco-link { display: flex; align-items: flex-start; gap: 12px; padding: 14px; background: var(--bg-surface); border-radius: var(--radius-sm); border: 1px solid var(--border); transition: border-color 0.2s; font-size: 14px; color: var(--text-dim); }
+    .eco-link:hover { border-color: var(--accent); opacity: 1; }
+    .eco-link .dot { width: 8px; height: 8px; min-width: 8px; background: var(--accent); border-radius: 50%; margin-top: 6px; }
+    footer { border-top: 1px solid var(--border); padding: 32px 0; margin-top: 48px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 13px; color: var(--text-muted); }
+    .footer-disclaimer { max-width: 480px; font-size: 12px; color: var(--text-muted); opacity: 0.6; }
+    .section-title { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 24px; }
+    @media (max-width: 640px) { .hero { padding: 40px 0 24px; } .cards-grid { grid-template-columns: 1fr; } .footer-inner { flex-direction: column; text-align: center; } }
+  </style>
+</head>
+<body>
+
+  <!-- Shared ecosystem nav — served from clawpurse.ai -->
+  <script src="https://clawpurse.ai/nav.js"></script>
+
+  <section class="hero container">
+    <h1>{{hero_title}}</h1>
+    <p>{{hero_subtitle}}</p>
+  </section>
+
+  <section class="swap-section container">
+    <div class="swap-frame-wrap">
+      <iframe src="https://app.uniswap.org/#/swap?outputCurrency=0x53be7be0ce7f92bcbd2138305735160fb799be4f&chain=ethereum" title="Uniswap Swap Widget — Get NTMPI" allow="clipboard-write" loading="lazy"></iframe>
+    </div>
+    <p class="swap-note">{{swap_note}}</p>
+  </section>
+
+  <div class="container">
+    <div class="cards-grid">
+      <div class="card">
+        <h3><span class="icon">◈</span> {{info_title}}</h3>
+        <p style="margin-bottom:12px">{{info_p1}}</p>
+        <p>{{info_p2}}</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">⬡</span> {{details_title}}</h3>
+        <table class="details-table">
+          <tr><td>{{details_contract}}</td><td><span class="mono"><a href="https://etherscan.io/token/0x53be7be0ce7f92bcbd2138305735160fb799be4f" target="_blank" rel="noopener">0x53be...be4f</a></span></td></tr>
+          <tr><td>{{details_chain}}</td><td>{{details_chain_value}}</td></tr>
+          <tr><td>{{details_supply}}</td><td>{{details_supply_value}}</td></tr>
+          <tr><td>{{details_explorer}}</td><td><a href="https://explorer.neutaro.io/wallet/accounts" target="_blank" rel="noopener">explorer.neutaro.io</a></td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <h3><span class="icon">↗</span> {{other_ways_title}}</h3>
+        <p style="margin-bottom:10px"><a href="https://www.mexc.com/exchange/NTMPI_USDT" target="_blank" rel="noopener">MEXC</a> — {{other_ways_mexc}}</p>
+        <p style="margin-bottom:10px"><a href="https://oraidex.io" target="_blank" rel="noopener">OraiDEX</a> — {{other_ways_oraidex}}</p>
+        <p>{{other_ways_staking}}</p>
+      </div>
+      <div class="card">
+        <h3><span class="icon">⟁</span> {{bridge_title}}</h3>
+        <p style="margin-bottom:14px">{{bridge_p1}}</p>
+        <ol class="steps">
+          <li><a href="https://oraidex.io/bridge" target="_blank" rel="noopener">{{bridge_step1}}</a></li>
+          <li>{{bridge_step2}}</li>
+          <li>{{bridge_step3}}</li>
+          <li><a href="https://explorer.neutaro.io/Neutaro/staking" target="_blank" rel="noopener">{{bridge_step4}}</a></li>
+        </ol>
+      </div>
+    </div>
+    <div style="padding: 32px 0;">
+      <p class="section-title">{{ecosystem_title}}</p>
+      <div class="eco-links">
+        <a href="https://clawpurse.ai" class="eco-link"><span class="dot"></span><span>{{ecosystem_wallet}}</span></a>
+        <a href="https://gateway.clawpurse.ai" class="eco-link"><span class="dot"></span><span>{{ecosystem_gateway}}</span></a>
+        <a href="https://drip.clawpurse.ai" class="eco-link"><span class="dot"></span><span>{{ecosystem_drip}}</span></a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <span>{{footer_built}} <a href="https://clawpurse.ai">ClawPurse</a></span>
+        <span class="footer-disclaimer">{{footer_disclaimer}}</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

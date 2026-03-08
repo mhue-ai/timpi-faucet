@@ -109,11 +109,11 @@ fs.writeFileSync(path.join(DIST, '404.html'), `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Not Found — get.clawpurse.ai</title>
   <style>
-    body { font-family: 'DM Sans', sans-serif; background: #0a0b0d; color: #e8eaf0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    body { font-family: 'Outfit', sans-serif; background: #0c0e13; color: #e2e4ea; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
     .box { text-align: center; }
-    h1 { font-size: 48px; color: #00d4aa; margin-bottom: 8px; }
-    p { color: #8b8fa3; }
-    a { color: #00d4aa; }
+    h1 { font-size: 48px; color: #f47458; margin-bottom: 8px; }
+    p { color: #8b8f9e; }
+    a { color: #f47458; }
   </style>
 </head>
 <body>

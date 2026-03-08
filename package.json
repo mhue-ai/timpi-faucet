@@ -6,6 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc && cp src/db/schema.sql dist/db/",
+    "build:get": "cd get && node build.cjs",
+    "build:all": "npm run build:get && npm run build",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "lint": "eslint src/",

@@ -1,4 +1,5 @@
 // Timpi Drip - Community faucet for NTMPI tokens
+// Also serves get.clawpurse.ai via hostname routing
 import Fastify, { FastifyInstance, FastifyServerOptions } from 'fastify';
 import cors from '@fastify/cors';
 import fastifyStatic from '@fastify/static';
@@ -11,6 +12,7 @@ import { registerSecurityMiddleware } from './middleware/security.js';
 import { mkdirSync, existsSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
+import { registerGetSite } from './get-site.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -48,6 +50,9 @@ async function registerPlugins(server: FastifyInstance) {
   await server.register(fastifyCookie, {
     secret: CONFIG.adminPassword,
   });
+
+  // Get site (get.clawpurse.ai) — must register BEFORE drip static files
+  await registerGetSite(server);
 
   await server.register(fastifyStatic, {
     root: join(__dirname, '..', 'public'),
@@ -100,6 +105,7 @@ const printBanner = (port: number, protocolLabel: string) => {
 ║ Drip (new): ${CONFIG.dripAmountNew} NTMPI / ${CONFIG.cooldownNew}h cooldown                      ║
 ║ Drip (trusted): ${CONFIG.dripAmountTrusted} NTMPI / ${CONFIG.cooldownTrusted}h cooldown                   ║
 ║ PoW difficulty: ${CONFIG.powDifficulty} leading zeros                              ║
+║ Get site:  get.clawpurse.ai (hostname routed)              ║
 ╚══════════════════════════════════════════════════════════════╝
 `);
 };
