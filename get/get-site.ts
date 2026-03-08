@@ -1,7 +1,7 @@
 // Get NTMPI site — hostname-based routing for get.clawpurse.ai
 // Serves static files from get/dist/ when the request hostname is get.clawpurse.ai
 import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync, statSync } from 'fs';
 import { dirname, join, extname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -38,26 +38,41 @@ function serveGetFile(filePath: string, reply: FastifyReply): void {
   }
 
   if (existsSync(fullPath)) {
+    // If it's a directory, look for index.html inside it
+    if (statSync(fullPath).isDirectory()) {
+      const indexPath = join(fullPath, 'index.html');
+      if (existsSync(indexPath)) {
+        const content = readFileSync(indexPath);
+        reply.header('Content-Type', 'text/html; charset=utf-8').send(content);
+      } else {
+        serve404(reply);
+      }
+      return;
+    }
+
     const ext = extname(fullPath);
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
     const content = readFileSync(fullPath);
     reply.header('Content-Type', contentType).send(content);
   } else {
-    // Try adding index.html for directory requests
+    // Try adding index.html for paths like /en → /en/index.html
     const indexPath = join(fullPath, 'index.html');
     if (existsSync(indexPath)) {
       const content = readFileSync(indexPath);
       reply.header('Content-Type', 'text/html; charset=utf-8').send(content);
     } else {
-      // 404
-      const notFoundPath = join(GET_ROOT, '404.html');
-      if (existsSync(notFoundPath)) {
-        const content = readFileSync(notFoundPath);
-        reply.code(404).header('Content-Type', 'text/html; charset=utf-8').send(content);
-      } else {
-        reply.code(404).send('Not Found');
-      }
+      serve404(reply);
     }
+  }
+}
+
+function serve404(reply: FastifyReply): void {
+  const notFoundPath = join(GET_ROOT, '404.html');
+  if (existsSync(notFoundPath)) {
+    const content = readFileSync(notFoundPath);
+    reply.code(404).header('Content-Type', 'text/html; charset=utf-8').send(content);
+  } else {
+    reply.code(404).send('Not Found');
   }
 }
 
